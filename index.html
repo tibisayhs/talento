@@ -1,0 +1,843 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Talento en Acción</title>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap">
+<style>
+/* Concepto: plataforma educativa SaaS. Barra lateral azul noche en escritorio, navegación inferior táctil en tableta/teléfono. Superficies blancas alternadas con bloques de color vibrante. */
+:root{
+  --blue:#2563EB;--fuchsia:#EC4899;--violet:#8B5CF6;--cyan:#06B6D4;--lime:#A3E635;--orange:#F97316;--navy:#0F172A;
+  --bg:#F8FAFC;--surface:#FFFFFF;--surface2:#F1F5F9;--ink:#0F172A;--muted:#475569;--line:#E2E8F0;
+  --limeInk:#3F6212;--blueInk:#1D4ED8;--violetInk:#6D28D9;--fuchsiaInk:#BE185D;--orangeInk:#C2410C;--cyanInk:#0E7490;
+  --shadow:0 1px 2px rgba(15,23,42,.05),0 10px 28px rgba(15,23,42,.07);
+  --fh:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --fb:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0B1120;--surface:#131C31;--surface2:#1B2640;--ink:#F1F5F9;--muted:#A9B6CC;--line:#27334F;
+  --limeInk:#BEF264;--blueInk:#93B4FF;--violetInk:#C4B5FD;--fuchsiaInk:#F9A8D4;--orangeInk:#FDBA74;--cyanInk:#67E8F9;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.35);color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B1120;--surface:#131C31;--surface2:#1B2640;--ink:#F1F5F9;--muted:#A9B6CC;--line:#27334F;
+  --limeInk:#BEF264;--blueInk:#93B4FF;--violetInk:#C4B5FD;--fuchsiaInk:#F9A8D4;--orangeInk:#FDBA74;--cyanInk:#67E8F9;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.35);color-scheme:dark}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--fb);font-size:15px;line-height:1.55;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0;touch-action:manipulation}
+textarea,input{font:inherit;color:inherit}
+h1,h2,h3,h4{font-family:var(--fh);margin:0;letter-spacing:-.01em;line-height:1.15;text-wrap:balance;color:var(--ink)}
+p{margin:0}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:8px}
+.i{flex:none;display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* layout */
+.app{min-height:100vh}
+.side{display:none}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;gap:10px;padding:10px max(16px,env(safe-area-inset-left,0px));background:var(--navy);color:#fff}
+.top b{font-family:var(--fh);font-size:16px;font-weight:800}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--navy)}
+.main{min-width:0}
+.wrap{max-width:1120px;margin:0 auto;padding-block:22px 120px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:22px}
+.bnav{position:fixed;left:0;right:0;bottom:0;z-index:25;display:grid;grid-template-columns:repeat(7,1fr);background:var(--surface);border-top:1px solid var(--line);padding:6px max(6px,env(safe-area-inset-left,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-right,0px));box-shadow:0 -8px 24px rgba(15,23,42,.08)}
+.bnav button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 0 6px;border-radius:12px;font-size:10.5px;font-weight:600;color:var(--muted);min-height:52px;min-width:0}
+.bnav button.on{color:#fff;background:linear-gradient(135deg,var(--blue),var(--violet))}
+@media (min-width:900px){
+  .top,.bnav,body::before{display:none}
+  .side{display:flex;flex-direction:column;position:fixed;inset:0 auto 0 0;width:272px;background:linear-gradient(180deg,#0F172A 0%,#16204A 100%);color:#fff;padding:24px 16px calc(20px + env(safe-area-inset-bottom,0px));z-index:20;gap:6px;overflow-y:auto}
+  .main{margin-left:272px}
+  .wrap{padding-block:34px 60px;padding-left:max(32px,env(safe-area-inset-left,0px));padding-right:max(32px,env(safe-area-inset-right,0px))}
+}
+.brand{display:flex;align-items:center;gap:12px;padding:4px 8px 20px}
+.brand b{font-family:var(--fh);font-weight:800;font-size:17px;line-height:1.1;display:block}
+.brand small{color:#A9B6CC;font-size:12px}
+.navb{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px 14px;border-radius:14px;color:#C7D2E6;font-weight:600;min-height:48px;transition:background .2s,color .2s}
+.navb:hover{background:rgba(255,255,255,.08);color:#fff}
+.navb.on{background:linear-gradient(135deg,var(--blue),var(--violet));color:#fff;box-shadow:0 8px 20px rgba(37,99,235,.35)}
+.side-foot{margin-top:auto;padding:14px;border-radius:16px;background:rgba(255,255,255,.07);font-size:12.5px;color:#C7D2E6;display:flex;flex-direction:column;gap:8px}
+.side-foot .bar{background:rgba(255,255,255,.15)}
+
+/* primitives */
+.ico{display:inline-grid;place-items:center;flex:none;width:var(--s,44px);height:var(--s,44px);border-radius:50%;background:var(--c,var(--blue));color:#fff;box-shadow:0 6px 14px color-mix(in srgb,var(--c,var(--blue)) 35%,transparent)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}
+.pad{padding:20px}
+@media(min-width:700px){.pad{padding:26px}}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--violetInk)}
+.h1{font-size:clamp(26px,4.4vw,40px);font-weight:800}
+.h2{font-size:clamp(20px,2.6vw,26px);font-weight:800}
+.h3{font-size:17px;font-weight:700}
+.lead{color:var(--muted);font-size:16px;max-width:62ch}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.between{justify-content:space-between}
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:50px;padding:0 24px;border-radius:999px;font-weight:700;font-size:15px;transition:transform .15s,box-shadow .2s,background .2s;text-align:center}
+.btn:active{transform:scale(.97)}
+.btn-hot{background:var(--fuchsia);color:#fff;box-shadow:0 10px 24px rgba(236,72,153,.38)}
+.btn-hot:hover{background:#DB2777}
+.btn-p{background:var(--blue);color:#fff;box-shadow:0 10px 22px rgba(37,99,235,.3)}
+.btn-p:hover{background:#1D4ED8}
+.btn-ghost{background:var(--surface);color:var(--ink);border:1.5px solid var(--line)}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blueInk)}
+.btn-glass{background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.35)}
+.btn-glass:hover{background:rgba(255,255,255,.2)}
+.btn-lime{background:var(--lime);color:var(--navy)}
+.btn[disabled],.btn.off{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn-sm{min-height:42px;padding:0 18px;font-size:14px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;font-size:12px;font-weight:700;background:var(--surface2);color:var(--muted)}
+.pill.ok{background:color-mix(in srgb,var(--lime) 30%,transparent);color:var(--limeInk)}
+.pill.warn{background:color-mix(in srgb,var(--orange) 18%,transparent);color:var(--orangeInk)}
+.pill.cy{background:color-mix(in srgb,var(--cyan) 18%,transparent);color:var(--cyanInk)}
+.bar{height:10px;border-radius:99px;background:var(--surface2);overflow:hidden}
+.bar>i{display:block;height:100%;width:var(--w,0%);border-radius:99px;background:var(--c,linear-gradient(90deg,var(--cyan),var(--blue)));animation:grow .9s cubic-bezier(.2,.8,.2,1)}
+@keyframes grow{from{width:0}}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes ringin{from{stroke-dashoffset:var(--C)}}
+.view{display:flex;flex-direction:column;gap:22px;min-width:0}
+.view.anim{animation:rise .35s ease both}
+.noanim *{animation:none!important}
+.ringw{position:relative;flex:none}
+.ringw svg{display:block}
+.rt{stroke:var(--surface2)}
+.rv{stroke-linecap:round;animation:ringin 1s cubic-bezier(.2,.8,.2,1)}
+.ringl{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-family:var(--fh);font-weight:800;font-size:22px}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-radius:30px;color:#fff;padding:28px 22px 26px;background:
+  radial-gradient(600px 340px at 85% 10%,rgba(236,72,153,.55),transparent 60%),
+  radial-gradient(520px 380px at 0% 100%,rgba(37,99,235,.7),transparent 60%),
+  radial-gradient(500px 300px at 60% 110%,rgba(139,92,246,.6),transparent 60%),#0F172A;
+  display:grid;gap:26px;grid-template-columns:minmax(0,1fr)}
+@media(min-width:760px){.hero{padding:48px 44px;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);align-items:center}}
+.hero h1{color:#fff;font-size:clamp(34px,6.6vw,60px);font-weight:800;line-height:1.02}
+.hero h1 span{background:linear-gradient(90deg,#67E8F9,#C4B5FD,#F9A8D4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.sub{color:#D5DEEF;font-size:17px;max-width:46ch}
+.hero .tag{display:inline-flex;gap:8px;align-items:center;padding:6px 13px;border-radius:99px;background:rgba(255,255,255,.12);font-size:13px;font-weight:600;width:fit-content}
+.art{position:relative;min-height:260px}
+.art svg{width:100%;height:auto;display:block}
+.fl{position:absolute;display:flex;align-items:center;gap:8px;padding:7px 14px 7px 7px;border-radius:99px;background:rgba(255,255,255,.14);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25);font-size:13px;font-weight:700;animation:floaty 5s ease-in-out infinite}
+.benefit{display:flex;gap:14px;align-items:center;padding:16px}
+.benefit b{font-family:var(--fh);font-size:18px;display:block;line-height:1.2}
+.path{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
+.pstep{display:flex;gap:12px;align-items:flex-start;padding:16px;text-align:left;width:100%;border-radius:18px;border:1.5px solid var(--line);background:var(--surface);transition:transform .15s,border-color .2s}
+.pstep:hover{transform:translateY(-2px);border-color:var(--violet)}
+.pstep.done{border-color:color-mix(in srgb,var(--lime) 70%,var(--line))}
+
+/* diagnostic */
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dots i{width:22px;height:8px;border-radius:99px;background:var(--surface2)}
+.dots i.d{background:var(--lime)}
+.dots i.c{background:var(--violet);width:34px}
+.stmt{padding:18px;border-radius:18px;background:var(--surface2);display:flex;flex-direction:column;gap:14px}
+.stmt p.q{font-weight:600;font-size:16.5px;line-height:1.4}
+.opts{display:grid;gap:8px;grid-template-columns:1fr}
+.opt{display:flex;align-items:center;gap:12px;min-height:50px;padding:6px 14px;border-radius:14px;background:var(--surface);border:1.5px solid var(--line);text-align:left;font-weight:600;transition:all .15s}
+.opt:hover{border-color:var(--violet)}
+.opt .n{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--surface2);font-family:var(--fh);font-weight:800;font-size:14px;flex:none}
+.opt.sel{background:var(--violet);color:#fff;border-color:var(--violet);transform:scale(1.01);box-shadow:0 8px 18px rgba(139,92,246,.35)}
+.opt.sel .n{background:#fff;color:var(--violetInk)}
+@media(min-width:700px){.opts{grid-template-columns:repeat(5,1fr)}.opt{flex-direction:column;justify-content:center;text-align:center;padding:12px 6px;font-size:13px;gap:6px}}
+.note{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:color-mix(in srgb,var(--cyan) 12%,transparent);color:var(--ink);font-size:13.5px}
+.note .i{color:var(--cyanInk);margin-top:2px}
+.err{padding:12px 14px;border-radius:14px;background:color-mix(in srgb,var(--orange) 15%,transparent);color:var(--orangeInk);font-weight:600;font-size:14px}
+.err ul{margin:6px 0 0;padding-left:18px;font-weight:500}
+
+/* results */
+.banner{border-radius:28px;color:#fff;padding:26px 22px;background:linear-gradient(120deg,var(--blue),var(--violet) 55%,var(--fuchsia));display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.banner h1{color:#fff}
+.banner .eyebrow{color:#E9D5FF}
+.chartbox{width:100%;max-width:560px;margin:0 auto}
+.chartbox svg{width:100%;height:auto;display:block}
+.chartbox text{font-family:var(--fb);fill:var(--muted)}
+.lgd{display:grid;gap:6px;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));font-size:13px}
+.lgd div{display:flex;align-items:center;gap:8px;min-width:0}
+.lgd .nn{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:800;flex:none;background:var(--c)}
+.brow{display:grid;grid-template-columns:36px minmax(0,1fr) 52px;gap:10px;align-items:center}
+.brow .nm{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brow .vv{font-weight:800;font-family:var(--fh);text-align:right}
+.scard{padding:18px;display:flex;flex-direction:column;gap:12px;border-radius:20px;border:1px solid var(--line);background:var(--surface);position:relative;overflow:hidden}
+.scard::after{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:var(--c)}
+.score{font-family:var(--fh);font-weight:800;font-size:28px}
+
+/* dimensions */
+.dcard{display:flex;flex-direction:column;gap:12px;text-align:left;padding:18px;border-radius:22px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .18s,box-shadow .2s;width:100%;min-width:0}
+.dcard:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(15,23,42,.14)}
+.dhead{border-radius:28px;color:#fff;padding:24px 22px;background:var(--c);background:linear-gradient(135deg,var(--c),color-mix(in srgb,var(--c) 55%,#0F172A));display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.dhead h1{color:#fff}
+.dhead .ico{background:rgba(255,255,255,.22);box-shadow:none}
+.sec{display:flex;flex-direction:column;gap:10px}
+.sec .lab{display:flex;gap:10px;align-items:center}
+.ta{width:100%;min-height:96px;resize:vertical;padding:12px 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);line-height:1.5}
+.ta:focus{border-color:var(--c,var(--blue));outline:3px solid color-mix(in srgb,var(--c,var(--blue)) 25%,transparent)}
+.tin{width:100%;min-height:48px;padding:0 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface)}
+.callout{padding:16px 18px;border-radius:18px;background:color-mix(in srgb,var(--c,var(--blue)) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--c,var(--blue)) 28%,var(--line))}
+.chk{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;border:2px solid var(--line);background:var(--surface);flex:none;color:transparent;transition:all .15s}
+.chk[aria-checked="true"]{background:var(--lime);border-color:var(--lime);color:var(--navy)}
+.chkrow{display:flex;gap:12px;align-items:center;min-height:48px;text-align:left;width:100%}
+
+/* plan */
+.week{border-radius:24px;overflow:hidden;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow)}
+.whead{display:flex;gap:14px;align-items:center;padding:18px 20px;color:#fff;background:var(--c)}
+.whead h3{color:#fff}
+.whead .ico{background:rgba(255,255,255,.22);box-shadow:none}
+.task{padding:14px 18px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.task.done .tt{text-decoration:line-through;color:var(--muted)}
+.task summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--blueInk);list-style:none;display:inline-flex;align-items:center;gap:6px;min-height:34px}
+.task summary::-webkit-details-marker{display:none}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cell{aspect-ratio:1/1;border-radius:12px;background:var(--surface2);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--muted);position:relative;min-width:0}
+.cell small{font-size:9.5px;font-weight:500;opacity:.8}
+.cell.t{background:color-mix(in srgb,var(--blue) 14%,var(--surface2));color:var(--blueInk)}
+.cell.p{background:color-mix(in srgb,var(--orange) 24%,var(--surface2));color:var(--orangeInk)}
+.cell.k{background:var(--lime);color:var(--navy)}
+.cell.now{outline:3px solid var(--fuchsia);outline-offset:1px}
+.cell.hd{aspect-ratio:auto;background:none;font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:2px 0}
+.cell.a1{background:color-mix(in srgb,var(--cyan) 30%,var(--surface2));color:var(--ink)}
+.cell.a2{background:color-mix(in srgb,var(--blue) 55%,var(--surface2));color:#fff}
+.cell.a3{background:var(--violet);color:#fff}
+.cell.e{background:none}
+
+/* progress */
+.tile{padding:20px;display:flex;flex-direction:column;gap:6px}
+.big{font-family:var(--fh);font-weight:800;font-size:40px;line-height:1}
+.cols{display:flex;align-items:flex-end;gap:5px;height:150px;border-bottom:2px solid var(--line);padding-bottom:0}
+.cols>div{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;gap:4px;font-size:11px;color:var(--muted)}
+.cols i{display:block;width:100%;max-width:26px;border-radius:8px 8px 3px 3px;background:linear-gradient(180deg,var(--violet),var(--blue));height:var(--h);animation:colin .8s cubic-bezier(.2,.8,.2,1);min-height:3px}
+.cols i.z{background:var(--surface2)}
+@keyframes colin{from{height:0}}
+.dl{display:flex;gap:5px;margin-top:6px;font-size:11px;color:var(--muted)}
+.dl span{flex:1;text-align:center;min-width:0}
+.ach{display:flex;gap:14px;padding:16px;border-radius:20px;border:1px solid var(--line);background:var(--surface);align-items:flex-start}
+.ach.lock{opacity:.92}
+.ach.lock .ico{background:var(--surface2);color:var(--muted);box-shadow:none}
+.ach.un{border-color:color-mix(in srgb,var(--lime) 70%,var(--line));background:linear-gradient(135deg,color-mix(in srgb,var(--lime) 14%,var(--surface)),var(--surface))}
+.hist{display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.hist:first-child{border-top:0}
+
+/* journal */
+.entry{padding:18px;border-radius:20px;border:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;gap:10px}
+.qa b{display:block;font-size:12.5px;color:var(--violetInk);margin-bottom:2px}
+.empty{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:44px 22px;border-radius:26px;border:2px dashed var(--line);background:var(--surface)}
+.empty p{max-width:44ch;color:var(--muted)}
+
+/* overlay */
+.toasts{position:fixed;left:0;right:0;bottom:calc(86px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;align-items:center;gap:8px;z-index:60;pointer-events:none;padding:0 16px}
+@media(min-width:900px){.toasts{bottom:28px;left:272px}}
+.toast{pointer-events:auto;display:flex;align-items:center;gap:12px;max-width:440px;padding:11px 18px 11px 11px;border-radius:99px;background:var(--navy);color:#fff;box-shadow:0 14px 34px rgba(15,23,42,.35);font-weight:600;font-size:14px;animation:rise .3s ease both}
+.toast.ach{background:linear-gradient(120deg,var(--blue),var(--violet),var(--fuchsia))}
+.modalbg{position:fixed;inset:0;z-index:80;background:rgba(15,23,42,.62);display:grid;place-items:center;padding:20px;animation:rise .2s ease both}
+.modal{width:min(440px,100%);padding:24px;display:flex;flex-direction:column;gap:14px}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}.fl{animation:none!important}}
+</style>
+<div id="app"></div>
+<script>
+"use strict";
+/* ============ ÍCONOS (trazos estilo Lucide, SVG en línea) ============ */
+const IC={
+'shield-check':'<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+'flame':'<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',
+'rocket':'<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
+'target':'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+'calendar-check':'<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="m9 16 2 2 4-4"/>',
+'wrench':'<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
+'mountain':'<path d="m8 3 4 8 5-5 5 15H2L8 3z"/>',
+'zap':'<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+'book-open':'<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>',
+'badge-check':'<path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/>',
+'users':'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+'clipboard-check':'<rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
+'users-round':'<path d="M18 21a8 8 0 0 0-16 0"/><circle cx="10" cy="8" r="5"/><path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3"/>',
+'home':'<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+'clipboard-list':'<rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/>',
+'radar':'<path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/><path d="M4 6h.01"/><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/><path d="M12 18h.01"/><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/><circle cx="12" cy="12" r="2"/><path d="m13.41 10.59 5.66-5.66"/>',
+'layout-grid':'<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>',
+'calendar-days':'<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/>',
+'trending-up':'<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>',
+'notebook-pen':'<path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/>',
+'trophy':'<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>',
+'arrow-right':'<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+'arrow-left':'<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>',
+'check':'<path d="M20 6 9 17l-5-5"/>',
+'sparkles':'<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/>',
+'lock':'<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+'award':'<path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/>',
+'compass':'<circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/>',
+'flag':'<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/>',
+'repeat':'<path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/>',
+'plus':'<path d="M5 12h14"/><path d="M12 5v14"/>',
+'trash':'<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>',
+'pencil':'<path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>',
+'refresh':'<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
+'lightbulb':'<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>',
+'bar-chart':'<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
+'star':'<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+'clock':'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+'x':'<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+'circle-check':'<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
+'info':'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
+'activity':'<path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/>',
+'flask':'<path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/>'
+};
+
+/* ============ CONTENIDO DE LAS 13 DIMENSIONES (original) ============ */
+const DIMS=[
+{id:1,name:'Confianza en uno mismo',short:'Confianza',icon:'shield-check',color:'#2563EB',
+ intro:'Es la convicción razonada de que puedes enfrentar lo que viene aprendiendo, ajustando y cumpliendo tus compromisos. No es ausencia de dudas: es confiar en tu capacidad de responder a ellas.',
+ why:'Quien confía en su criterio propone, decide y se expone al aprendizaje. Sin esta base, el talento se queda esperando permiso, y las oportunidades se las lleva quien se atreve a intentarlo primero.',
+ ex:'Marina, analista de datos, tenía las habilidades para liderar un proyecto, pero siempre sugería que lo hiciera otra persona. Empezó a registrar cada compromiso que cumplía. Al mes tenía veinte evidencias y aceptó dirigir un piloto pequeño.',
+ q:['¿En qué situaciones dudo de mí aunque tenga evidencia de que puedo hacerlo?','¿Qué logros recientes demuestran capacidades que suelo minimizar?','¿Qué decisión estoy posponiendo esperando sentirme más segura o seguro?'],
+ exe:'Escribe una lista de cinco compromisos que cumpliste en los últimos tres meses. Junto a cada uno anota la capacidad que demostraste y cierra con una frase que resuma lo que esa evidencia dice de ti.',
+ ret:'Durante 7 días, anota cada noche un compromiso pequeño que cumpliste.',meta:'7 registros',
+ s:['Confío en que puedo resolver los problemas nuevos que se me presentan.','Expreso mis ideas aunque no tenga la certeza de que serán aceptadas.'],
+ plan:[['Inventario de evidencias','Anota diez logros de tu historia reciente y la capacidad que cada uno demuestra.'],['Una acción que evitabas','Elige una tarea que posponías por dudas y dedícale 25 minutos hoy.'],['Compromiso a la vista','Comparte con una persona de confianza un compromiso concreto y su fecha de cumplimiento.'],['Revisión de evidencias','Compara tu inventario inicial con lo logrado en estas semanas y escribe qué cambió en tu forma de decidir.']]},
+{id:2,name:'Pasión',short:'Pasión',icon:'flame',color:'#F97316',
+ intro:'Es la energía interior que te lleva a invertir esfuerzo en algo que te importa. Funciona como combustible: sostiene la motivación cuando la tarea se vuelve difícil.',
+ why:'La pasión convierte el trabajo en propósito y facilita la constancia. Sin ella, incluso las oportunidades más atractivas se sienten pesadas y el rendimiento depende solo de la disciplina.',
+ ex:'Julián, contador, notó que perdía la noción del tiempo cuando enseñaba hojas de cálculo a sus colegas. Dedicó una hora semanal a crear tutoriales y hoy coordina la capacitación interna de su área.',
+ q:['¿Qué actividades me hacen perder la noción del tiempo?','¿Qué problema o causa me incomoda tanto que quisiera ayudar a resolverlo?','¿Qué parte de mi trabajo actual me da energía y cuál me la quita?'],
+ exe:'Divide una hoja en dos columnas: "Me da energía" y "Me la quita". Anota diez actividades de tu semana típica y marca las tres que más quisieras ampliar.',
+ ret:'Esta semana dedica 60 minutos, repartidos en dos o tres bloques, a una actividad que te energiza.',meta:'60 minutos registrados',
+ s:['Siento entusiasmo genuino por las metas en las que trabajo.','Cuando algo me importa, encuentro tiempo y energía para avanzarlo.'],
+ plan:[['Mapa de energía','Durante tres días anota al final de la jornada qué actividades te dieron energía y cuáles te la quitaron.'],['Bloque de pasión','Reserva 45 minutos para avanzar en algo que te entusiasma, sin interrupciones.'],['Conversar sobre lo que te mueve','Cuéntale a alguien qué te apasiona y pídele una idea para ponerlo en práctica.'],['Integra la pasión','Define una forma concreta de incluir esa actividad en tu rutina del próximo mes.']]},
+{id:3,name:'Iniciativa',short:'Iniciativa',icon:'rocket',color:'#EC4899',
+ intro:'Es la disposición a dar el primer paso sin esperar condiciones perfectas ni instrucciones. Combina ver una oportunidad con decidir moverse hacia ella.',
+ why:'Las ideas sin acción no generan resultados. La iniciativa multiplica tus oportunidades porque se aprende más moviéndose que planeando indefinidamente.',
+ ex:'Camila notó que el equipo repetía cada lunes las mismas preguntas. Armó una plantilla de una página, la probó dos semanas y su jefe la adoptó para toda el área.',
+ q:['¿Qué idea tengo guardada que podría probar en pequeño esta semana?','¿Qué excusa uso con más frecuencia para no empezar?','¿Qué problema cercano podría resolver sin que nadie me lo pida?'],
+ exe:'Elige una idea pendiente y reduce su primer paso hasta que tome menos de 15 minutos. Escribe cuándo y dónde lo harás exactamente.',
+ ret:'Inicia tres acciones pequeñas que tenías pendientes en los próximos 5 días.',meta:'3 acciones iniciadas',
+ s:['Cuando veo una oportunidad, actúo sin esperar a que alguien me lo indique.','Empiezo mis proyectos aunque no tenga todas las condiciones resueltas.'],
+ plan:[['Lista de pendientes valiosos','Escribe cinco ideas o tareas que has pospuesto y elige la que más impacto tendría.'],['Regla de los 15 minutos','Dedica 15 minutos hoy al primer paso de la tarea elegida.'],['Mejora que nadie pidió','Detecta una pequeña mejora en tu entorno y ejecútala esta semana.'],['Hábito de arranque','Define un ritual de inicio de 5 minutos y úsalo cada mañana durante la semana.']]},
+{id:4,name:'Enfoque',short:'Enfoque',icon:'target',color:'#06B6D4',
+ intro:'Es la capacidad de dirigir tu atención y tu energía hacia lo que realmente importa, dejando fuera lo que distrae. Implica claridad de prioridades y límites firmes.',
+ why:'El talento disperso rinde menos que el talento concentrado. Enfocarte protege tu tiempo y te permite avanzar en lo esencial en lugar de estar ocupado en todo.',
+ ex:'Andrés tenía siete proyectos abiertos y ninguno terminaba. Eligió tres, comunicó que los demás quedaban en pausa y en un mes cerró dos.',
+ q:['¿Cuáles son las tres prioridades que darían mayor resultado en mis próximos 90 días?','¿Qué distracciones recurrentes me roban atención?','¿Qué compromisos podría pausar o delegar para proteger lo importante?'],
+ exe:'Lista todo lo que hoy ocupa tu atención. Clasifícalo en esencial, útil y prescindible, y escribe qué harás con lo prescindible.',
+ ret:'Durante 5 días, trabaja un bloque diario de 45 minutos en tu prioridad principal sin notificaciones.',meta:'5 bloques',
+ s:['Sé cuáles son mis prioridades y trabajo primero en ellas.','Puedo concentrarme en una tarea importante sin dejarme llevar por distracciones.'],
+ plan:[['Define tus 3 prioridades','Escribe tus tres prioridades de los próximos 90 días y por qué las elegiste.'],['Bloque sin distracciones','Trabaja 45 minutos en tu prioridad principal con el teléfono en silencio.'],['Di no a algo','Identifica una petición o actividad que no aporta y declínala con respeto.'],['Revisión de foco','Revisa cuánto de tu semana estuvo dedicado a tus tres prioridades y ajusta.']]},
+{id:5,name:'Preparación',short:'Preparación',icon:'calendar-check',color:'#4F46E5',
+ intro:'Es el hábito de anticipar, planificar y reunir lo necesario antes de actuar. Convierte las intenciones en un camino con pasos claros.',
+ why:'Quien se prepara reduce errores, gana seguridad y aprovecha mejor las oportunidades que aparecen de forma inesperada.',
+ ex:'Lucía debía presentar ante un cliente nuevo. Dedicó una hora a imaginar las cinco preguntas más difíciles y ensayó sus respuestas. La reunión fluyó y el proyecto se firmó.',
+ q:['¿Qué compromiso importante se acerca y cómo me estoy preparando?','¿En qué situaciones improviso cuando podría anticiparme?','¿Qué información o recurso me falta para avanzar con tranquilidad?'],
+ exe:'Elige un evento importante de las próximas semanas. Escribe qué podría salir mal, qué necesitas tener listo y una lista de verificación de cinco pasos.',
+ ret:'Prepara por escrito una reunión o entrega con lista de verificación y revísala el día anterior.',meta:'1 lista completada',
+ s:['Planifico con anticipación mis compromisos importantes.','Antes de iniciar una tarea compleja, reúno la información y los recursos que necesito.'],
+ plan:[['Diagnóstico de improvisación','Identifica tres situaciones recientes donde improvisaste y qué habría ayudado preparar.'],['Plan semanal','Dedica 20 minutos a planear tus tres resultados clave de la semana.'],['Ensayo previo','Simula en voz alta una conversación o presentación importante antes de realizarla.'],['Sistema de preparación','Crea una plantilla de preparación reutilizable para tus compromisos clave.']]},
+{id:6,name:'Práctica',short:'Práctica',icon:'wrench',color:'#0D9488',
+ intro:'Es el trabajo deliberado y repetido que transforma una habilidad básica en dominio. Se centra en mejorar aspectos específicos, no solo en repetir.',
+ why:'El talento sin práctica se estanca. La mejora sostenida proviene de pequeñas repeticiones con retroalimentación.',
+ ex:'Sofía quería hablar mejor en público. Grababa un video de dos minutos cada día, revisaba un solo aspecto y, tras seis semanas, su equipo notó una claridad mucho mayor en sus presentaciones.',
+ q:['¿Qué habilidad clave de mi trabajo practico menos de lo que debería?','¿Quién podría darme retroalimentación sincera sobre mi desempeño?','¿Cómo puedo convertir una tarea habitual en una oportunidad de práctica?'],
+ exe:'Elige una habilidad, descompónla en tres subhabilidades y define un ejercicio de 10 minutos para cada una.',
+ ret:'Practica una habilidad elegida 10 minutos al día durante 7 días.',meta:'7 sesiones registradas',
+ s:['Dedico tiempo regular a practicar y mejorar mis habilidades clave.','Pido retroalimentación y la uso para ajustar mi forma de hacer las cosas.'],
+ plan:[['Elige tu habilidad','Selecciona la habilidad que más impactaría tus resultados y define cómo medirás su progreso.'],['Sesiones de 10 minutos','Practica la habilidad 10 minutos al día durante cuatro días.'],['Retroalimentación puntual','Pide a alguien que observe tu desempeño y te señale una cosa para mejorar.'],['Registro de avance','Compara tu nivel inicial con el actual y documenta lo aprendido.']]},
+{id:7,name:'Perseverancia',short:'Perseverancia',icon:'mountain',color:'#7C3AED',
+ intro:'Es la capacidad de continuar hacia una meta pese a obstáculos, cansancio o resultados lentos. Combina paciencia, flexibilidad y compromiso.',
+ why:'La mayoría de los logros valiosos requieren tiempo. Persistir te permite superar el punto donde muchas personas abandonan.',
+ ex:'Diego buscó empleo durante cuatro meses. Fijó una meta semanal de cinco contactos, ajustó su carta cada vez que recibía respuesta y consiguió tres entrevistas finales.',
+ q:['¿Qué meta importante abandoné y qué me haría retomarla?','¿Qué obstáculo actual me está desgastando?','¿Qué sistema podría ayudarme a seguir cuando disminuye la motivación?'],
+ exe:'Describe un obstáculo actual, divide el camino en etapas de una semana y define qué harás cuando sientas ganas de abandonar.',
+ ret:'Elige una meta pendiente y avanza en ella 6 de los próximos 7 días, aunque sea 10 minutos.',meta:'6 días de avance',
+ s:['Sigo trabajando en mis metas aun cuando los resultados tardan en llegar.','Después de un tropiezo, retomo el camino y ajusto mi estrategia.'],
+ plan:[['Una meta que merece constancia','Escoge una meta de largo plazo y escribe por qué merece tu constancia.'],['Plan para el desánimo','Define tres acciones concretas que harás cuando quieras abandonar.'],['Racha de avance','Avanza en tu meta 5 días seguidos con una acción mínima diaria.'],['Lección del obstáculo','Escribe qué obstáculo enfrentaste, cómo respondiste y qué ajustarías.']]},
+{id:8,name:'Valentía',short:'Valentía',icon:'zap',color:'#D97706',
+ intro:'Es la disposición a actuar a pesar del miedo, el riesgo o la incomodidad cuando algo importante está en juego. No elimina el temor: lo reconoce y avanza.',
+ why:'Las decisiones valiosas suelen requerir salir de la zona de comodidad. La valentía te permite conversar, proponer y arriesgarte a aprender.',
+ ex:'Paola postergaba pedir una reasignación de funciones por temor a la respuesta. Preparó sus argumentos, pidió la reunión y obtuvo un proyecto más acorde con su perfil.',
+ q:['¿Qué conversación o decisión estoy evitando por miedo?','¿Qué es lo peor que podría pasar y cómo lo manejaría?','¿Qué riesgo pequeño podría asumir esta semana para entrenar mi valentía?'],
+ exe:'Escribe un miedo concreto, el escenario más probable, el peor escenario y el primer paso valiente que darías.',
+ ret:'Realiza dos acciones que te incomoden de forma moderada en los próximos 7 días.',meta:'2 acciones realizadas',
+ s:['Tomo decisiones difíciles aunque me generen incomodidad.','Digo lo que pienso con respeto aun cuando otros puedan no estar de acuerdo.'],
+ plan:[['Nombra tu miedo','Describe un miedo que frena tu avance y qué te costaría seguir evitándolo.'],['Paso valiente pequeño','Da un paso pequeño hacia lo que temes, como enviar un mensaje o pedir una reunión.'],['Conversación pendiente','Mantén la conversación que has aplazado con claridad y respeto.'],['Balance de valentía','Evalúa qué sucedió y cómo se compara con lo que temías.']]},
+{id:9,name:'Aprendizaje continuo',short:'Aprendizaje',icon:'book-open',color:'#0891B2',
+ intro:'Es la actitud de seguir aprendiendo, desaprendiendo y actualizando tus conocimientos durante toda la vida profesional. Requiere curiosidad y humildad.',
+ why:'Los entornos cambian con rapidez. Aprender de manera constante mantiene tu relevancia y abre posibilidades nuevas.',
+ ex:'Ernesto dedicaba 20 minutos diarios a una lección práctica de análisis de datos. A los tres meses automatizó un informe que antes le tomaba una tarde completa.',
+ q:['¿Qué conocimiento haría la mayor diferencia en mi trabajo este año?','¿Cómo convierto lo que aprendo en algo que aplico?','¿Qué creencia mía debería actualizar?'],
+ exe:'Define un tema de aprendizaje, tres recursos que usarás y un pequeño proyecto donde aplicarlo.',
+ ret:'Dedica 20 minutos diarios durante 5 días a aprender sobre un tema y escribe una aplicación práctica.',meta:'5 sesiones y 1 aplicación',
+ s:['Dedico tiempo regular a aprender algo nuevo relacionado con mis metas.','Aplico lo que aprendo en situaciones reales de mi trabajo o mi vida.'],
+ plan:[['Brecha de conocimiento','Identifica la habilidad o el conocimiento que más necesitas y por qué.'],['Sesión de aprendizaje','Dedica 30 minutos a estudiar tu tema con un recurso de calidad.'],['Aplicación inmediata','Usa lo aprendido en una tarea real y registra el resultado.'],['Enseña lo aprendido','Explica a otra persona los tres aprendizajes más útiles del mes.']]},
+{id:10,name:'Integridad y carácter',short:'Integridad',icon:'badge-check',color:'#BE185D',
+ intro:'Es la coherencia entre lo que piensas, dices y haces, incluso cuando nadie observa. El carácter se forma con decisiones cotidianas que reflejan tus valores.',
+ why:'La confianza de los demás se construye con coherencia. Un talento notable sin integridad pierde credibilidad rápidamente.',
+ ex:'Raúl descubrió un error en un informe que ya había sido aprobado. Lo reportó de inmediato, propuso la corrección y su equipo reforzó la confianza en él.',
+ q:['¿Cuáles son mis tres valores no negociables?','¿En qué situaciones mis acciones no reflejan lo que digo valorar?','¿Qué compromiso pequeño he descuidado y debo cumplir o renegociar?'],
+ exe:'Escribe tres valores y, para cada uno, una conducta observable que lo demuestre y otra que lo contradiga.',
+ ret:'Durante 7 días cumple cada compromiso que adquieras o renegócialo con anticipación.',meta:'100% de compromisos atendidos',
+ s:['Mis acciones son coherentes con los valores que declaro.','Reconozco mis errores y asumo las consecuencias sin buscar excusas.'],
+ plan:[['Define tus valores','Elige tres valores y escribe qué conductas los hacen visibles.'],['Auditoría de coherencia','Revisa tu semana e identifica una decisión que no estuvo alineada con tus valores.'],['Corrige un compromiso','Cumple o renegocia con honestidad un compromiso que tenías pendiente.'],['Carta de carácter','Escribe cómo quieres que otros describan tu forma de actuar dentro de un año.']]},
+{id:11,name:'Relaciones personales',short:'Relaciones',icon:'users',color:'#E11D48',
+ intro:'Es la habilidad de construir vínculos de confianza, escuchar con atención y aportar valor a las personas de tu entorno.',
+ why:'Las oportunidades, el aprendizaje y el apoyo llegan a través de las personas. Relaciones sólidas amplían tu alcance y tu capacidad de resolver problemas.',
+ ex:'Valeria agendó un café mensual con una persona de otra área para escucharla. Al medio año, esas conversaciones le abrieron dos colaboraciones.',
+ q:['¿Qué relaciones valiosas he descuidado?','¿Cómo demuestro interés real por las personas con las que trabajo?','¿A quién podría ayudar esta semana sin esperar nada a cambio?'],
+ exe:'Haz una lista de diez personas clave en tu vida personal y profesional. Define una acción de cuidado concreta para tres de ellas.',
+ ret:'Contacta con atención genuina a 5 personas en los próximos 7 días.',meta:'5 conversaciones',
+ s:['Escucho con atención y busco comprender antes de responder.','Mantengo contacto con las personas importantes para mí aun sin necesitar algo de ellas.'],
+ plan:[['Mapa de relaciones','Lista las personas que influyen en tu desarrollo y anota cuándo fue tu último contacto.'],['Mensaje de aprecio','Escribe a alguien para agradecerle algo específico.'],['Conversación de escucha','Mantén una conversación en la que dediques más tiempo a escuchar que a hablar.'],['Ritual de conexión','Programa un hábito mensual para cultivar tus relaciones clave.']]},
+{id:12,name:'Responsabilidad',short:'Responsabilidad',icon:'clipboard-check',color:'#4D7C0F',
+ intro:'Es asumir la propiedad de tus decisiones, resultados y compromisos sin delegar la culpa. Incluye cumplir lo prometido y responder por el impacto de tus actos.',
+ why:'Una persona responsable genera confiabilidad y puede liderar. También recupera el control sobre lo que sí puede cambiar.',
+ ex:'Tras un retraso en una entrega, Martín no culpó a terceros: explicó qué había fallado, propuso un nuevo plan y estableció un punto de revisión intermedio.',
+ q:['¿Qué resultados atribuyo a factores externos que en parte dependen de mí?','¿Qué compromisos adquiero con facilidad y luego me cuesta cumplir?','¿Cómo informo cuando algo no saldrá como se esperaba?'],
+ exe:'Describe una situación en la que algo salió mal. Separa lo que dependió de ti, lo que no, y qué harás distinto la próxima vez.',
+ ret:'Lleva durante 7 días una lista de compromisos y marca su cumplimiento.',meta:'90% o más cumplido',
+ s:['Cumplo lo que prometo en los plazos acordados.','Cuando algo sale mal, identifico mi parte y propongo cómo corregirlo.'],
+ plan:[['Lista de compromisos','Anota todos tus compromisos vigentes con su fecha y responsable.'],['Cierra un pendiente','Resuelve un compromiso retrasado o renegóciale el plazo con claridad.'],['Informe proactivo','Comunica a tiempo el avance de un compromiso, aunque haya dificultades.'],['Evaluación de cumplimiento','Calcula tu porcentaje de compromisos cumplidos y define una mejora.']]},
+{id:13,name:'Trabajo en equipo',short:'Equipo',icon:'users-round',color:'#059669',
+ intro:'Es la capacidad de colaborar con otros para lograr resultados que no alcanzarías solo: aportar, coordinar, confiar y celebrar logros compartidos.',
+ why:'Los proyectos de mayor impacto requieren talentos complementarios. Un equipo bien coordinado multiplica las capacidades individuales.',
+ ex:'Al iniciar un proyecto, Natalia propuso que cada integrante explicara en qué era más fuerte y en qué necesitaba apoyo. Distribuyeron las tareas según esos aportes y redujeron los reprocesos.',
+ q:['¿Cuál es mi aporte distintivo al equipo?','¿En qué casos prefiero hacerlo todo yo en lugar de colaborar?','¿Qué podría hacer para que otras personas del equipo brillen?'],
+ exe:'Define tu rol ideal en un equipo, qué esperas de los demás y un acuerdo de trabajo que propondrías.',
+ ret:'Durante la próxima semana reconoce públicamente el aporte de 3 compañeros y pide ayuda en 1 tarea.',meta:'4 acciones realizadas',
+ s:['Colaboro de manera abierta y comparto información con mi equipo.','Reconozco los aportes de otros y celebro los logros colectivos.'],
+ plan:[['Tu aporte al equipo','Identifica tus tres aportes más valiosos y cómo ponerlos al servicio del grupo.'],['Pide ayuda','Solicita apoyo en una tarea explicando con claridad qué necesitas.'],['Reconoce un aporte','Reconoce de forma específica el trabajo de una persona de tu equipo.'],['Acuerdo de equipo','Propón o ajusta un acuerdo de trabajo que mejore la coordinación.']]}
+];
+const SCALE=['Nunca','Casi nunca','Algunas veces','Frecuentemente','Siempre'];
+const WEEKS=[
+ {n:1,name:'DESCUBRE',sub:'Observación, reflexión y autoconocimiento',icon:'compass',color:'#06B6D4',ref:'¿Qué descubrí esta semana sobre mis hábitos y mi talento?'},
+ {n:2,name:'ACTÚA',sub:'Acciones concretas y pequeños compromisos',icon:'rocket',color:'#EC4899',ref:'¿Qué acciones realicé y cómo me sentí al hacerlas?'},
+ {n:3,name:'FORTALECE',sub:'Desafíos progresivos para desarrollar nuevas habilidades',icon:'wrench',color:'#8B5CF6',ref:'¿Qué obstáculo superé y qué habilidad se fortaleció?'},
+ {n:4,name:'TRANSFORMA',sub:'Evaluación de resultados, consolidación y próximos pasos',icon:'trophy',color:'#F97316',ref:'¿Qué resultados concretos veo y cuáles serán mis próximos pasos?'}];
+const JQ=[
+ ['sparkles','¿Qué descubrí hoy sobre mi talento?'],
+ ['badge-check','¿Qué decisión importante tomé?'],
+ ['target','¿Qué acción me acercó a mi objetivo?'],
+ ['book-open','¿Qué aprendí de mis resultados?'],
+ ['trending-up','¿Qué puedo mejorar mañana?']];
+const NAV=[['home','Inicio','Inicio','home'],['diag','Mi diagnóstico','Test','clipboard-list'],['results','Mis resultados','Mapa','radar'],['dims','Las 13 dimensiones','Las 13','layout-grid'],['plan','Mi plan de 30 días','Plan','calendar-days'],['progress','Mi progreso','Progreso','trending-up'],['journal','Mi diario','Diario','notebook-pen']];
+</script>
+<script>
+"use strict";
+/* ============ UTILIDADES ============ */
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ic=(n,s=20,sw=2)=>`<svg class="i" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n]||''}</svg>`;
+const chip=(n,c,s=44)=>`<span class="ico" style="--c:${c};--s:${s}px">${ic(n,Math.round(s*.5))}</span>`;
+const DIM=id=>DIMS.find(d=>d.id===id);
+const pad2=n=>String(n).padStart(2,'0');
+const ymd=d=>`${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+const today=()=>ymd(new Date());
+const parseD=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const addDays=(s,n)=>{const d=parseD(s);d.setDate(d.getDate()+n);return ymd(d)};
+const fmt=(s,o)=>parseD(s).toLocaleDateString('es',o||{day:'numeric',month:'short'});
+const fmtLong=s=>parseD(s).toLocaleDateString('es',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+const fs1=s=>{const t=s.split('. ')[0];return t.endsWith('.')?t:t+'.'};
+const list=a=>a.length<2?a.join(''):a.slice(0,-1).join(', ')+' y '+a[a.length-1];
+const round1=n=>(Math.round(n*10)/10).toFixed(1).replace('.',',');
+
+/* ============ ESTADO Y PERSISTENCIA ============ */
+const KEY='talento-en-accion-v1';
+const DEF=()=>({view:'home',dimId:null,diag:{a:{},step:0,done:false,date:null},dims:{},plan:null,journal:[],jdraft:{id:null,a:['','','','','']},act:{},last:null,ach:{}});
+let S=DEF(),mem=null;
+const ui={modal:null,err:null,jerr:false,jedit:false,open:{}};
+function load(){
+  let r=null;try{r=localStorage.getItem(KEY)}catch(e){}
+  if(!r)r=mem;
+  if(r){try{const o=JSON.parse(r);S=Object.assign(DEF(),o);S.diag=Object.assign(DEF().diag,o.diag||{});S.jdraft=Object.assign(DEF().jdraft,o.jdraft||{});if(!Array.isArray(S.jdraft.a)||S.jdraft.a.length!==5)S.jdraft.a=['','','','',''];}catch(e){S=DEF()}}
+}
+function save(){const j=JSON.stringify(S);mem=j;try{localStorage.setItem(KEY,j)}catch(e){}}
+const D=id=>S.dims[id]||(S.dims[id]={vis:false,r:['','',''],ex:'',ret:false,rn:'',done:false,date:null,ts:null});
+
+/* ============ CÁLCULOS ============ */
+const ansv=(d,k)=>S.diag.a[d.id+'.'+k];
+function scores(){return DIMS.map(d=>{const avg=(ansv(d,0)+ansv(d,1))/2;return{id:d.id,avg,pct:Math.round(avg/5*100)}})}
+function ranked(){const sc=scores();return{sc,top:[...sc].sort((a,b)=>b.avg-a.avg||a.id-b.id).slice(0,3),low:[...sc].sort((a,b)=>a.avg-b.avg||a.id-b.id).slice(0,3)}}
+function dimProg(id){const s=D(id);let n=0;s.r.forEach(t=>{if(t.trim().length>=10)n++});if(s.ex.trim().length>=10)n++;if(s.ret&&s.rn.trim().length>=3)n++;return n}
+function stats(){
+  const dd=DIMS.filter(d=>D(d.id).done).length;
+  const vis=DIMS.filter(d=>D(d.id).vis||D(d.id).done).length;
+  const ret=DIMS.filter(d=>D(d.id).ret).length;
+  const pt=S.plan?S.plan.tasks.length:0,pd=S.plan?S.plan.tasks.filter(t=>t.done).length:0;
+  const total=1+13+pt,done=(S.diag.done?1:0)+dd+pd;
+  return{dd,vis,ret,pt,pd,total,done,pct:Math.round(done/total*100),days:Object.keys(S.act).length,jn:S.journal.length,planPct:pt?Math.round(pd/pt*100):0}
+}
+const ACH=[
+ {id:'primer',icon:'flag',color:'#2563EB',name:'Primer paso',desc:'Completa el diagnóstico de 26 afirmaciones.',ok:s=>S.diag.done,prog:s=>[S.diag.done?1:0,1]},
+ {id:'explorador',icon:'compass',color:'#06B6D4',name:'Explorador del talento',desc:'Completa los ejercicios de cinco dimensiones.',ok:s=>s.dd>=5,prog:s=>[Math.min(s.dd,5),5]},
+ {id:'accion',icon:'rocket',color:'#F97316',name:'Persona de acción',desc:'Realiza cinco retos prácticos de las dimensiones.',ok:s=>s.ret>=5,prog:s=>[Math.min(s.ret,5),5]},
+ {id:'constancia',icon:'repeat',color:'#8B5CF6',name:'Constancia',desc:'Registra actividad en siete días distintos.',ok:s=>s.days>=7,prog:s=>[Math.min(s.days,7),7]},
+ {id:'compromiso',icon:'calendar-check',color:'#EC4899',name:'Compromiso',desc:'Genera tu plan personalizado de 30 días.',ok:s=>!!S.plan,prog:s=>[S.plan?1:0,1]},
+ {id:'voz',icon:'notebook-pen',color:'#0D9488',name:'Voz propia',desc:'Escribe tres entradas en tu diario de evolución.',ok:s=>s.jn>=3,prog:s=>[Math.min(s.jn,3),3]},
+ {id:'panorama',icon:'star',color:'#D97706',name:'Panorama completo',desc:'Completa las 13 dimensiones.',ok:s=>s.dd>=13,prog:s=>[s.dd,13]},
+ {id:'transformacion',icon:'trophy',color:'#059669',name:'Transformación',desc:'Finaliza todas las actividades del plan de 30 días.',ok:s=>s.pt>0&&s.pd===s.pt,prog:s=>[s.pd,s.pt||17]}
+];
+function checkAch(){const s=stats();ACH.forEach(a=>{if(!S.ach[a.id]&&a.ok(s)){S.ach[a.id]=today();toast('Logro desbloqueado: '+a.name,'ach',a.icon)}})}
+function logAct(t){const k=today();S.act[k]=(S.act[k]||0)+1;S.last={t,ts:Date.now()}}
+function commit(t){if(t)logAct(t);checkAch();save()}
+
+/* ============ COMPONENTES ============ */
+function ring(p,c,size,label,sub){
+  const r=(size-16)/2,C=2*Math.PI*r,h=size/2;
+  return `<div class="ringw" style="width:${size}px;height:${size}px"><svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="${esc(sub)}: ${p}%"><circle class="rt" cx="${h}" cy="${h}" r="${r}" fill="none" stroke-width="10"/><circle class="rv" cx="${h}" cy="${h}" r="${r}" fill="none" stroke="${c}" stroke-width="10" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-p/100)}" style="--C:${C}" transform="rotate(-90 ${h} ${h})"/></svg><div class="ringl" style="font-size:${Math.round(size/5)}px">${label}</div></div>`;
+}
+function bar(p,c){return `<div class="bar" role="progressbar" aria-valuenow="${p}" aria-valuemin="0" aria-valuemax="100"><i style="--w:${p}%;${c?'--c:'+c:''}"></i></div>`}
+function empty(icon,color,title,text,btns){return `<div class="empty">${chip(icon,color,64)}<h2 class="h2">${title}</h2><p>${text}</p><div class="row" style="justify-content:center">${btns}</div></div>`}
+function toast(msg,type,icon){
+  const box=document.getElementById('toasts');if(!box)return;
+  const el=document.createElement('div');el.className='toast'+(type==='ach'?' ach':'');
+  el.innerHTML=(type==='ach'?`<span class="ico" style="--c:rgba(255,255,255,.25);--s:34px;box-shadow:none">${ic(icon||'award',18)}</span>`:'')+`<span>${esc(msg)}</span>`;
+  box.appendChild(el);setTimeout(()=>{el.style.transition='opacity .3s';el.style.opacity='0';setTimeout(()=>el.remove(),320)},3800);
+}
+
+/* ============ VISTA: INICIO ============ */
+function heroArt(){return `<div class="art" aria-hidden="true">
+<svg viewBox="0 0 420 300"><defs><linearGradient id="gA" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#2563EB"/><stop offset="1" stop-color="#8B5CF6"/></linearGradient><linearGradient id="gB" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#EC4899"/><stop offset="1" stop-color="#F97316"/></linearGradient></defs>
+<rect x="36" y="200" width="72" height="80" rx="16" fill="url(#gA)" opacity=".75"/><rect x="124" y="160" width="72" height="120" rx="16" fill="url(#gA)" opacity=".85"/><rect x="212" y="112" width="72" height="168" rx="16" fill="url(#gA)"/><rect x="300" y="60" width="72" height="220" rx="16" fill="url(#gB)"/>
+<path d="M64 168 C140 140 230 92 336 28" stroke="#fff" stroke-width="4" stroke-dasharray="1 11" stroke-linecap="round" fill="none"/>
+<circle cx="336" cy="28" r="15" fill="#A3E635"/><path d="M329 28l5 5 9-10" stroke="#0F172A" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="64" cy="168" r="7" fill="#fff"/><circle cx="388" cy="132" r="5" fill="#67E8F9"/><circle cx="22" cy="120" r="4" fill="#F9A8D4"/></svg>
+<div class="fl" style="left:0;top:6%;animation-delay:0s"><span class="ico" style="--c:#06B6D4;--s:30px">${ic('target',16)}</span>Metas</div>
+<div class="fl" style="right:2%;top:42%;animation-delay:-1.6s"><span class="ico" style="--c:#8B5CF6;--s:30px">${ic('book-open',16)}</span>Aprendizaje</div>
+<div class="fl" style="left:4%;bottom:6%;animation-delay:-3s"><span class="ico" style="--c:#F97316;--s:30px">${ic('flame',16)}</span>Talento</div>
+<div class="fl" style="right:8%;top:2%;animation-delay:-2.2s"><span class="ico" style="--c:#EC4899;--s:30px">${ic('trending-up',16)}</span>Progreso</div></div>`}
+function vHome(){
+  const s=stats(),dg=S.diag;
+  let resume='';
+  const answered=Object.keys(dg.a).length;
+  if(!dg.done&&answered>0)resume=`<div class="card pad row between"><div class="row" style="flex:1;min-width:230px">${chip('clipboard-list','#8B5CF6',48)}<div><h3 class="h3">Continúa tu diagnóstico</h3><p class="muted small">Llevas ${answered} de 26 respuestas guardadas.</p></div></div><button class="btn btn-p btn-sm" data-act="go" data-v="diag">Continuar ${ic('arrow-right',18)}</button></div>`;
+  else if(dg.done&&!S.plan)resume=`<div class="card pad row between"><div class="row" style="flex:1;min-width:230px">${chip('calendar-days','#EC4899',48)}<div><h3 class="h3">Tu mapa está listo</h3><p class="muted small">Genera tu plan de 30 días con tus tres oportunidades principales.</p></div></div><button class="btn btn-hot btn-sm" data-act="go" data-v="results">Ver mi mapa ${ic('arrow-right',18)}</button></div>`;
+  else if(S.plan)resume=`<div class="card pad row between"><div class="row" style="flex:1;min-width:230px">${ring(s.planPct,'#06B6D4',64,s.planPct+'%','Plan de 30 días')}<div><h3 class="h3">Tu plan de 30 días avanza</h3><p class="muted small">${s.pd} de ${s.pt} actividades completadas.</p></div></div><button class="btn btn-p btn-sm" data-act="go" data-v="plan">Ir a mi plan ${ic('arrow-right',18)}</button></div>`;
+  const steps=[
+    ['diag','clipboard-list','#8B5CF6','Diagnóstico','26 afirmaciones sobre 13 dimensiones',dg.done],
+    ['results','radar','#2563EB','Tu mapa','Fortalezas y oportunidades',dg.done],
+    ['dims','layout-grid','#06B6D4','Biblioteca','Ejercicios y retos por dimensión',s.dd>0],
+    ['plan','calendar-days','#EC4899','Plan de 30 días','Acciones semana a semana',!!S.plan]];
+  return `
+<section class="hero">
+  <div class="col" style="gap:20px;position:relative;z-index:1">
+    <span class="tag">${ic('sparkles',16)} Convierte tu potencial en resultados</span>
+    <h1>TU TALENTO ES SOLO EL <span>COMIENZO.</span></h1>
+    <p class="sub">Descubre lo que puedes lograr cuando conviertes tus capacidades en decisiones, hábitos y acciones.</p>
+    <div class="row" style="margin-top:6px">
+      <button class="btn btn-hot" data-act="go" data-v="diag">Descubrir mi potencial ${ic('arrow-right',20)}</button>
+      <button class="btn btn-glass" data-act="go" data-v="dims">Explorar las 13 dimensiones</button>
+    </div>
+  </div>
+  ${heroArt()}
+</section>
+<section class="grid g3">
+  <div class="card benefit">${chip('layout-grid','#2563EB',52)}<div><b>13 dimensiones</b><span class="muted small">para explorar</span></div></div>
+  <div class="card benefit">${chip('clipboard-list','#8B5CF6',52)}<div><b>26 preguntas</b><span class="muted small">de autoconocimiento</span></div></div>
+  <div class="card benefit">${chip('calendar-check','#EC4899',52)}<div><b>30 días</b><span class="muted small">para pasar a la acción</span></div></div>
+</section>
+${resume}
+<section class="col">
+  <div><span class="eyebrow">Tu recorrido</span><h2 class="h2" style="margin-top:6px">De la autoevaluación a la acción</h2></div>
+  <div class="path">${steps.map(p=>`<button class="pstep ${p[5]?'done':''}" data-act="go" data-v="${p[0]}">${chip(p[5]?'check':p[1],p[5]?'#65A30D':p[2],42)}<div class="col" style="gap:2px"><b style="font-family:var(--fh)">${p[3]}</b><span class="muted small">${p[4]}</span></div></button>`).join('')}</div>
+</section>
+<section class="card pad col">
+  <div class="row">${chip('info','#06B6D4',36)}<h3 class="h3">Acerca de esta experiencia</h3></div>
+  <p class="muted small">Talento en Acción es una experiencia educativa independiente inspirada en conceptos generales de desarrollo del talento. No tiene afiliación con el autor ni con la editorial de ningún libro. Los contenidos, preguntas, ejercicios y ejemplos son originales. El diagnóstico es una autoevaluación orientativa y no una prueba psicométrica validada. Tus datos se guardan solo en este navegador.</p>
+  <div><button class="btn btn-ghost btn-sm" data-act="reset-ask">${ic('trash',16)} Borrar todos mis datos</button></div>
+</section>`;
+}
+
+/* ============ VISTA: DIAGNÓSTICO ============ */
+function vDiag(){
+  const dg=S.diag;
+  if(dg.done)return `<div><span class="eyebrow">Mi diagnóstico</span><h1 class="h1" style="margin-top:6px">Diagnóstico completado</h1></div>
+  <div class="card pad col">${chip('circle-check','#65A30D',56)}<h2 class="h2">Completaste el ${fmt(dg.date,{day:'numeric',month:'long',year:'numeric'})}</h2><p class="muted">Tus 26 respuestas están guardadas. Puedes revisar tu mapa o repetir la evaluación. Si la repites, se borran las respuestas actuales (tu plan y tus ejercicios se conservan).</p>
+  <div class="row"><button class="btn btn-p" data-act="go" data-v="results">Ver mi mapa ${ic('arrow-right',18)}</button><button class="btn btn-ghost" data-act="retake-ask">${ic('refresh',18)} Repetir evaluación</button></div></div>`;
+  const i=dg.step,d=DIMS[i];
+  const both=ansv(d,0)!=null&&ansv(d,1)!=null;
+  const dots=DIMS.map((x,j)=>`<i class="${j===i?'c':(ansv(x,0)!=null&&ansv(x,1)!=null?'d':'')}"></i>`).join('');
+  const nAns=Object.keys(dg.a).length;
+  return `<div><span class="eyebrow">Mi diagnóstico</span><h1 class="h1" style="margin-top:6px">¿Qué tan seguido ocurre esto en tu vida?</h1></div>
+<div class="card pad col" style="gap:16px">
+  <div class="row between"><b>Etapa ${i+1} de 13</b><span class="muted small">${nAns} de 26 respuestas · se guarda automáticamente</span></div>
+  ${bar(Math.round(nAns/26*100),'linear-gradient(90deg,var(--violet),var(--fuchsia))')}
+  <div class="dots" aria-hidden="true">${dots}</div>
+</div>
+<section class="card pad col" style="gap:18px;--c:${d.color}">
+  <div class="row">${chip(d.icon,d.color,56)}<div><span class="eyebrow" style="color:var(--muted)">Dimensión ${d.id}</span><h2 class="h2">${d.name}</h2></div></div>
+  ${[0,1].map(k=>`<div class="stmt" role="radiogroup" aria-label="${esc(d.s[k])}"><p class="q">${esc(d.s[k])}</p><div class="opts">${SCALE.map((l,j)=>`<button class="opt ${ansv(d,k)===j+1?'sel':''}" role="radio" aria-checked="${ansv(d,k)===j+1}" data-act="ans" data-k="${d.id}.${k}" data-v="${j+1}"><span class="n">${j+1}</span>${l}</button>`).join('')}</div></div>`).join('')}
+  ${both?'':`<p class="muted small row" style="gap:8px">${ic('info',16)} Responde las dos afirmaciones para continuar.</p>`}
+  <div class="row between">
+    <button class="btn btn-ghost" data-act="diag-prev" ${i===0?'disabled':''}>${ic('arrow-left',18)} Anterior</button>
+    <button class="btn btn-p" data-act="diag-next" ${both?'':'disabled'}>${i===12?'Ver mi mapa':'Siguiente'} ${ic('arrow-right',18)}</button>
+  </div>
+</section>
+<div class="note">${ic('info',18)}<span>Es una autoevaluación orientativa para reflexionar. No es una prueba psicométrica validada ni un diagnóstico profesional. Responde pensando en las últimas semanas.</span></div>`;
+}
+
+/* ============ VISTA: RESULTADOS ============ */
+function radar(sc){
+  const cx=260,cy=250,R=160,N=13;
+  const P=(i,v,rr)=>{const a=(-90+i*360/N)*Math.PI/180,r=(rr||R)*v/5;return[cx+r*Math.cos(a),cy+r*Math.sin(a)]};
+  const rings=[1,2,3,4,5].map(l=>`<polygon points="${DIMS.map((_,i)=>P(i,l).map(n=>n.toFixed(1)).join(',')).join(' ')}" fill="none" stroke="var(--line)" stroke-width="${l===5?1.6:1}"/>`).join('');
+  const axes=DIMS.map((_,i)=>{const p=P(i,5);return `<line x1="${cx}" y1="${cy}" x2="${p[0].toFixed(1)}" y2="${p[1].toFixed(1)}" stroke="var(--line)"/>`}).join('');
+  const pts=sc.map((x,i)=>P(i,x.avg).map(n=>n.toFixed(1)).join(',')).join(' ');
+  const dots=sc.map((x,i)=>{const p=P(i,x.avg),d=DIM(x.id);return `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="6" fill="${d.color}" stroke="#fff" stroke-width="2"><title>${esc(d.name)}: ${round1(x.avg)} de 5</title></circle>`}).join('');
+  const labs=sc.map((x,i)=>{const p=P(i,5,R+27),d=DIM(x.id);return `<g><circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="12" fill="${d.color}"/><text x="${p[0].toFixed(1)}" y="${(p[1]+4).toFixed(1)}" text-anchor="middle" font-size="12" font-weight="800" style="fill:#fff">${d.id}</text></g>`}).join('');
+  const lv=[1,2,3,4,5].map(l=>`<text x="${cx+5}" y="${cy-R*l/5-3}" font-size="10">${l}</text>`).join('');
+  return `<div class="chartbox"><svg viewBox="0 0 520 500" role="img" aria-label="Gráfico radar de las 13 dimensiones">${rings}${axes}${lv}<polygon points="${pts}" fill="rgba(139,92,246,.28)" stroke="#8B5CF6" stroke-width="3" stroke-linejoin="round"/>${dots}${labs}</svg></div>`;
+}
+function interp(rk){
+  const avg=rk.sc.reduce((a,b)=>a+b.avg,0)/13;
+  const nm=a=>list(a.map(x=>DIM(x.id).name.toLowerCase()));
+  let base;
+  if(avg<2.5)base='Tu autoevaluación muestra varias áreas con mucho espacio para crecer. Eso es un excelente punto de partida, porque te permite elegir con claridad dónde empezar.';
+  else if(avg<3.5)base='Tu autoevaluación combina áreas que valoras de forma sólida con otras que están en desarrollo, un equilibrio que facilita elegir acciones concretas.';
+  else if(avg<4.3)base='Tu autoevaluación refleja una base sólida en la mayoría de las dimensiones y algunas oportunidades claras para seguir avanzando.';
+  else base='Valoras de forma muy positiva casi todas las dimensiones. El reto ahora es mantener una mirada curiosa y contrastar tu percepción con la de otras personas.';
+  return `${base} Hoy valoras de forma más positiva ${nm(rk.top)}. La oportunidad más interesante para convertir ideas en acciones concretas está en ${nm(rk.low)}.`;
+}
+function vResults(){
+  if(!S.diag.done)return empty('radar','#8B5CF6','Tu mapa aparecerá aquí','Completa las 26 afirmaciones del diagnóstico y verás tus fortalezas, tus oportunidades y un gráfico de las 13 dimensiones.',`<button class="btn btn-hot" data-act="go" data-v="diag">${S.diag.a&&Object.keys(S.diag.a).length?'Continuar diagnóstico':'Comenzar diagnóstico'} ${ic('arrow-right',18)}</button>`);
+  const rk=ranked(),avg=rk.sc.reduce((a,b)=>a+b.avg,0)/13;
+  const hasPlan=!!S.plan;
+  return `<section class="banner"><div class="col" style="gap:8px;flex:1;min-width:240px"><span class="eyebrow">Resultado del ${fmt(S.diag.date,{day:'numeric',month:'long'})}</span><h1 class="h1">TU MAPA PERSONAL DEL TALENTO</h1></div><div class="row"><div style="text-align:center"><div class="big">${round1(avg)}</div><span class="small" style="opacity:.9">promedio de 5</span></div></div></section>
+<section class="card pad col"><div class="row">${chip('sparkles','#8B5CF6',44)}<h2 class="h2">Lo que muestra tu autoevaluación</h2></div><p style="font-size:16px">${interp(rk)}</p>
+<div class="note">${ic('info',18)}<span>Es una autoevaluación orientativa, no una prueba psicométrica validada. El porcentaje solo representa tu respuesta sobre la escala de 1 a 5. Si hay empates, se respeta el orden de las dimensiones.</span></div></section>
+<section class="grid g2">
+  <div class="card pad col"><div class="row">${chip('radar','#8B5CF6',40)}<h3 class="h3">Radar de las 13 dimensiones</h3></div>${radar(rk.sc)}
+    <div class="lgd">${rk.sc.map(x=>{const d=DIM(x.id);return `<div style="--c:${d.color}"><span class="nn">${d.id}</span><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.name}</span><b style="margin-left:auto">${round1(x.avg)}</b></div>`}).join('')}</div></div>
+  <div class="card pad col"><div class="row">${chip('bar-chart','#2563EB',40)}<h3 class="h3">Comparativo por dimensión</h3></div>
+    ${rk.sc.map(x=>{const d=DIM(x.id);return `<div class="brow">${chip(d.icon,d.color,34)}<div class="col" style="gap:4px"><span class="nm">${d.name}</span>${bar(x.pct,d.color)}</div><span class="vv">${x.pct}%</span></div>`}).join('')}</div>
+</section>
+<section class="col"><div class="row">${chip('star','#65A30D',40)}<h2 class="h2">Tus fortalezas principales</h2></div>
+<div class="grid g3">${rk.top.map((x,n)=>{const d=DIM(x.id);return `<div class="scard" style="--c:${d.color}"><div class="row between">${chip(d.icon,d.color,48)}<span class="pill ok">Fortaleza ${n+1}</span></div><h3 class="h3">${d.name}</h3><div class="row"><span class="score">${round1(x.avg)}</span><span class="muted small">de 5 · ${x.pct}%</span></div><p class="muted small">${fs1(d.intro)}</p><p class="small"><b>Para potenciarla:</b> ${d.plan[3][1]}</p><button class="btn btn-ghost btn-sm" data-act="dim-open" data-id="${d.id}">Explorar ${ic('arrow-right',16)}</button></div>`}).join('')}</div></section>
+<section class="col"><div class="row">${chip('rocket','#F97316',40)}<h2 class="h2">Tus oportunidades de crecimiento</h2></div>
+<div class="grid g3">${rk.low.map((x,n)=>{const d=DIM(x.id);return `<div class="scard" style="--c:${d.color}"><div class="row between">${chip(d.icon,d.color,48)}<span class="pill warn">Oportunidad ${n+1}</span></div><h3 class="h3">${d.name}</h3><div class="row"><span class="score">${round1(x.avg)}</span><span class="muted small">de 5 · ${x.pct}%</span></div><div class="callout" style="--c:${d.color}"><b class="small">Acción sugerida · ${d.plan[1][0]}</b><p class="small" style="margin-top:4px">${d.plan[1][1]}</p></div><button class="btn btn-ghost btn-sm" data-act="dim-open" data-id="${d.id}">Explorar ${ic('arrow-right',16)}</button></div>`}).join('')}</div></section>
+<section class="card pad row between" style="background:linear-gradient(120deg,color-mix(in srgb,var(--violet) 14%,var(--surface)),color-mix(in srgb,var(--fuchsia) 12%,var(--surface)))"><div class="row" style="flex:1;min-width:240px">${chip('calendar-days','#EC4899',52)}<div><h3 class="h3">${hasPlan?'Ya tienes un plan de 30 días':'Convierte este mapa en acción'}</h3><p class="muted small">${hasPlan?'Puedes volver a tu plan o generar uno nuevo con estos resultados.':'Generaremos tareas semanales para tus tres oportunidades principales.'}</p></div></div>
+<div class="row">${hasPlan?`<button class="btn btn-p" data-act="go" data-v="plan">Ir a mi plan</button>`:''}<button class="btn btn-hot" data-act="plan-create">${hasPlan?'Generar un plan nuevo':'Crear mi plan de crecimiento'} ${ic('arrow-right',18)}</button></div></section>
+<div><button class="btn btn-ghost btn-sm" data-act="retake-ask">${ic('refresh',16)} Repetir la evaluación</button></div>`;
+}
+
+/* ============ VISTA: DIMENSIONES ============ */
+function vDims(){
+  const s=stats();
+  return `<div class="row between"><div><span class="eyebrow">Biblioteca</span><h1 class="h1" style="margin-top:6px">Las 13 dimensiones</h1><p class="lead" style="margin-top:8px">Elige una dimensión, reflexiona, escribe tus respuestas y completa un reto medible.</p></div></div>
+<div class="card pad col" style="gap:10px"><div class="row between"><b>${s.dd} de 13 completadas</b><span class="muted small">${s.vis} exploradas</span></div>${bar(Math.round(s.dd/13*100),'linear-gradient(90deg,var(--cyan),var(--blue))')}</div>
+<div class="grid g3">${DIMS.map(d=>{const st=D(d.id),done=st.done,pr=dimProg(d.id);
+  return `<button class="dcard" style="--c:${d.color}" data-act="dim-open" data-id="${d.id}"><div class="row between" style="width:100%">${chip(d.icon,d.color,50)}${done?'<span class="pill ok">'+ic('check',13,3)+' Completada</span>':(st.vis||pr>0)?'<span class="pill cy">En curso</span>':'<span class="pill">Sin explorar</span>'}</div><div><span class="small muted" style="font-weight:700">DIMENSIÓN ${d.id}</span><h3 class="h3">${d.name}</h3></div><p class="muted small">${fs1(d.intro)}</p><div style="width:100%">${bar(pr*20,d.color)}</div></button>`}).join('')}</div>`;
+}
+function vDim(id){
+  const d=DIM(id),st=D(id),pr=dimProg(id);
+  const prev=DIM(id>1?id-1:13),next=DIM(id<13?id+1:1);
+  const errs=ui.err&&ui.err.id===id?ui.err.list:null;
+  return `<button class="btn btn-ghost btn-sm" data-act="go" data-v="dims" style="align-self:flex-start">${ic('arrow-left',18)} Las 13 dimensiones</button>
+<section class="dhead" style="--c:${d.color}">${chip(d.icon,d.color,68)}<div class="col" style="gap:6px;flex:1;min-width:200px"><span class="eyebrow" style="color:#fff;opacity:.85">Dimensión ${d.id} de 13</span><h1 class="h1">${d.name}</h1></div>
+<div class="col" style="gap:8px;flex:1;min-width:200px;max-width:340px"><div class="row between small"><b id="dptxt">${pr} de 5 pasos</b>${st.done?'<span class="pill ok">Completada</span>':''}</div><div class="bar" style="background:rgba(255,255,255,.28)"><i id="dpbar" style="--w:${pr*20}%;--c:#fff"></i></div></div></section>
+<section class="grid g2">
+  <div class="card pad col" style="--c:${d.color}"><div class="row">${chip('book-open',d.color,36)}<h3 class="h3">Qué significa</h3></div><p>${d.intro}</p></div>
+  <div class="card pad col" style="--c:${d.color}"><div class="row">${chip('trending-up',d.color,36)}<h3 class="h3">Por qué importa en tu vida y tu carrera</h3></div><p>${d.why}</p></div>
+</section>
+<section class="callout col" style="--c:${d.color}"><div class="row">${chip('lightbulb',d.color,36)}<h3 class="h3">Ejemplo práctico</h3></div><p>${d.ex}</p></section>
+<section class="card pad col" style="--c:${d.color}"><div class="row">${chip('notebook-pen',d.color,40)}<div><h3 class="h3">Reflexiona</h3><p class="muted small">Escribe con tus palabras (mínimo 10 caracteres por respuesta).</p></div></div>
+${d.q.map((q,k)=>`<div class="sec"><label class="lab" for="r-${id}-${k}"><b>${k+1}. ${q}</b></label><textarea class="ta" id="r-${id}-${k}" data-f="r:${id}:${k}" placeholder="Escribe tu respuesta…" style="--c:${d.color}">${esc(st.r[k])}</textarea></div>`).join('')}</section>
+<section class="card pad col" style="--c:${d.color}"><div class="row">${chip('flask',d.color,40)}<div><h3 class="h3">Ejercicio de aplicación</h3></div></div><p>${d.exe}</p><textarea class="ta" id="ex-${id}" data-f="ex:${id}" aria-label="Respuesta al ejercicio" placeholder="Desarrolla tu ejercicio aquí…" style="--c:${d.color};min-height:130px">${esc(st.ex)}</textarea></section>
+<section class="card pad col" style="--c:${d.color}"><div class="row">${chip('target','#F97316',40)}<div><h3 class="h3">Tu reto medible</h3><span class="pill warn">Meta: ${d.meta}</span></div></div><p>${d.ret}</p>
+<button class="chkrow" role="checkbox" aria-checked="${st.ret}" data-act="ret-toggle" data-id="${id}"><span class="chk" aria-checked="${st.ret}">${ic('check',20,3)}</span><b>Realicé este reto</b></button>
+<div class="sec"><label for="rn-${id}"><b>¿Cómo medí el resultado?</b></label><input class="tin" id="rn-${id}" data-f="rn:${id}" value="${esc(st.rn)}" placeholder="Ej.: cumplí 5 de 7 días" maxlength="200"></div></section>
+${errs?`<div class="err" id="derr" role="alert">Antes de completar esta dimensión revisa:<ul>${errs.map(e=>`<li>${e}</li>`).join('')}</ul></div>`:''}
+<div class="row between"><button class="btn ${st.done?'btn-ghost':'btn-lime'}" data-act="dim-done" data-id="${id}" style="${st.done?'':'min-height:56px'}">${st.done?'Marcar como pendiente':ic('circle-check',20)+' Marcar como completada'}</button>
+<div class="row"><button class="btn btn-ghost btn-sm" data-act="dim-open" data-id="${prev.id}" aria-label="Anterior: ${prev.name}">${ic('arrow-left',16)} ${prev.short}</button><button class="btn btn-ghost btn-sm" data-act="dim-open" data-id="${next.id}" aria-label="Siguiente: ${next.name}">${next.short} ${ic('arrow-right',16)}</button></div></div>`;
+}
+function updDim(id){const p=dimProg(id),t=document.getElementById('dptxt'),b=document.getElementById('dpbar');if(t)t.textContent=p+' de 5 pasos';if(b){b.style.animation='none';b.style.setProperty('--w',p*20+'%')}}
+
+/* ============ PLAN DE 30 DÍAS ============ */
+function createPlan(){
+  const rk=ranked(),low=rk.low.map(x=>x.id),tasks=[];
+  WEEKS.forEach(w=>{
+    low.forEach((id,i)=>{const p=DIM(id).plan[w.n-1];tasks.push({w:w.n,day:(w.n-1)*7+1+i*2,dim:id,title:p[0],desc:p[1],done:false,note:'',dd:null})});
+    tasks.push({w:w.n,day:w.n*7,dim:null,title:'Reflexión de la semana '+w.n,desc:w.ref+' Escribe tus conclusiones en la nota.',done:false,note:'',dd:null});
+  });
+  tasks.push({w:4,day:30,dim:null,title:'Carta a mi yo futuro',desc:'En la nota escribe qué lograste en 30 días, qué hábito mantendrás y cuál es tu próximo objetivo.',done:false,note:'',dd:null});
+  S.plan={start:today(),focus:low,tasks};ui.open={};
+  S.view='plan';commit('Generó su plan de 30 días');toast('Tu plan de 30 días está listo');render({anim:true,top:true});
+}
+function planDay(){return Math.round((parseD(today())-parseD(S.plan.start))/864e5)+1}
+function vPlan(){
+  if(!S.diag.done)return empty('calendar-days','#EC4899','Tu plan se crea con tu diagnóstico','Primero completa el diagnóstico. Así el plan se centra en tus tres dimensiones con mayor oportunidad.',`<button class="btn btn-hot" data-act="go" data-v="diag">Ir al diagnóstico ${ic('arrow-right',18)}</button>`);
+  if(!S.plan){const low=ranked().low;return `<div><span class="eyebrow">Mi plan</span><h1 class="h1" style="margin-top:6px">MI TRANSFORMACIÓN EN 30 DÍAS</h1></div>
+  <div class="card pad col"><p class="lead">Tu plan se construirá con estas tres dimensiones, que son hoy tus mayores oportunidades:</p><div class="row">${low.map(x=>{const d=DIM(x.id);return `<span class="pill" style="font-size:14px;padding:8px 14px;gap:8px">${chip(d.icon,d.color,26)}${d.name}</span>`}).join('')}</div>
+  <p class="muted">Incluye cuatro semanas (Descubre, Actúa, Fortalece y Transforma), 17 actividades con fecha sugerida y espacios de nota.</p><div><button class="btn btn-hot" data-act="plan-create">Crear mi plan de crecimiento ${ic('arrow-right',18)}</button></div></div>`}
+  const P=S.plan,s=stats(),dayN=planDay(),byDay={};
+  P.tasks.forEach((t,i)=>{(byDay[t.day]=byDay[t.day]||[]).push(t)});
+  const cal=Array.from({length:30},(_,k)=>{const n=k+1,ts=byDay[n]||[];let c='';
+    if(ts.length){c=ts.every(t=>t.done)?'k':(n<dayN?'p':'t')}
+    return `<div class="cell ${c} ${n===dayN?'now':''}" title="Día ${n}: ${ts.map(t=>esc(t.title)).join(', ')||'sin tareas'}"><span>${n}</span><small>${fmt(addDays(P.start,k),{day:'numeric',month:'numeric'})}</small></div>`}).join('');
+  const ranges=['Días 1 a 7','Días 8 a 14','Días 15 a 21','Días 22 a 30'];
+  return `<section class="banner" style="background:linear-gradient(120deg,var(--cyan),var(--blue) 50%,var(--violet))"><div class="col" style="gap:8px;flex:1;min-width:240px"><span class="eyebrow">Inicio: ${fmt(P.start,{day:'numeric',month:'long'})} · ${dayN>30?'Plan finalizado en el calendario':'Día '+Math.max(dayN,1)+' de 30'}</span><h1 class="h1">MI TRANSFORMACIÓN EN 30 DÍAS</h1><div class="row">${P.focus.map(id=>{const d=DIM(id);return `<span class="pill" style="background:rgba(255,255,255,.2);color:#fff">${d.name}</span>`}).join('')}</div></div>
+  <div class="row"><div style="background:var(--surface);color:var(--ink);border-radius:50%">${ring(s.planPct,'#8B5CF6',112,s.planPct+'%','Plan completado')}</div><div><div class="big">${s.pd}/${s.pt}</div><span class="small">actividades</span></div></div></section>
+<section class="card pad col"><div class="row">${chip('calendar-days','#2563EB',40)}<div><h3 class="h3">Calendario del plan</h3><p class="muted small">Verde: completo · Naranja: pendiente atrasado · Azul: con tareas</p></div></div><div class="cal">${cal}</div></section>
+${WEEKS.map(w=>{const ts=P.tasks.map((t,i)=>({t,i})).filter(x=>x.t.w===w.n),dn=ts.filter(x=>x.t.done).length;
+  return `<section class="week"><div class="whead" style="--c:${w.color}">${chip(w.icon,w.color,48)}<div style="flex:1;min-width:0"><h3 class="h3">Semana ${w.n} — ${w.name}</h3><span class="small" style="opacity:.92">${w.sub} · ${ranges[w.n-1]}</span></div><b style="font-family:var(--fh)">${dn}/${ts.length}</b></div>
+  ${ts.map(({t,i})=>{const d=t.dim?DIM(t.dim):null;
+    return `<div class="task ${t.done?'done':''}"><button class="chkrow" role="checkbox" aria-checked="${t.done}" data-act="task" data-i="${i}"><span class="chk" aria-checked="${t.done}">${ic('check',20,3)}</span><span class="col" style="gap:3px;flex:1"><span class="tt" style="font-weight:700">${esc(t.title)}</span><span class="small muted" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">${ic('clock',13)} ${fmt(addDays(P.start,t.day-1),{weekday:'short',day:'numeric',month:'short'})}${d?` · <span style="color:${d.color};font-weight:700">${d.name}</span>`:' · Reflexión'}${t.done?` · hecha el ${fmt(t.dd)}`:''}</span></span></button>
+    <p class="small muted" style="padding-left:44px">${esc(t.desc)}</p>
+    <details class="task-d" data-ti="${i}" ${ui.open[i]||t.note?'open':''} style="padding-left:44px"><summary>${ic('pencil',14)} Nota de reflexión</summary><textarea class="ta" id="tn-${i}" data-f="tn:${i}" aria-label="Nota de ${esc(t.title)}" placeholder="¿Qué observaste, qué aprendiste?" style="--c:${w.color};min-height:84px;margin-top:6px">${esc(t.note)}</textarea></details></div>`}).join('')}</section>`}).join('')}
+<div><button class="btn btn-ghost btn-sm" data-act="plan-create">${ic('refresh',16)} Generar un plan nuevo</button></div>`;
+}
+
+/* ============ PROGRESO ============ */
+function vProgress(){
+  const s=stats(),now=new Date(),k14=Array.from({length:14},(_,i)=>addDays(today(),i-13)),mx=Math.max(1,...k14.map(k=>S.act[k]||0));
+  const y=now.getFullYear(),m=now.getMonth(),first=(new Date(y,m,1).getDay()+6)%7,dim=new Date(y,m+1,0).getDate();
+  let cells='';['L','M','X','J','V','S','D'].forEach(x=>cells+=`<div class="cell hd">${x}</div>`);
+  for(let i=0;i<first;i++)cells+='<div class="cell e"></div>';
+  for(let d=1;d<=dim;d++){const key=`${y}-${pad2(m+1)}-${pad2(d)}`,n=S.act[key]||0;cells+=`<div class="cell ${n?(n>=4?'a3':n>=2?'a2':'a1'):''} ${key===today()?'now':''}" title="${n} acciones registradas" style="aspect-ratio:1.3/1"><span>${d}</span></div>`}
+  const hist=[];
+  S.journal.forEach(e=>{const t=e.a.find(x=>x.trim());hist.push({ts:e.ts,icon:'notebook-pen',color:'#0D9488',title:'Diario · '+fmt(e.date),txt:t||''})});
+  DIMS.forEach(d=>{const st=D(d.id);if(st.done)hist.push({ts:st.ts||0,icon:d.icon,color:d.color,title:'Dimensión completada · '+d.name,txt:st.r[0]})});
+  hist.sort((a,b)=>b.ts-a.ts);
+  const last=S.last?`${esc(S.last.t)} · ${new Date(S.last.ts).toLocaleDateString('es',{day:'numeric',month:'long'})}`:null;
+  const planNote=S.plan?'':' El plan aún no está generado.';
+  return `<div><span class="eyebrow">Mi progreso</span><h1 class="h1" style="margin-top:6px">ASÍ ESTÁS TRANSFORMANDO TU TALENTO</h1><p class="lead" style="margin-top:8px">Todas las cifras salen de lo que has hecho en esta aplicación.${planNote}</p></div>
+<section class="grid g4">
+  <div class="card tile"><div class="row between">${ring(s.pct,'#8B5CF6',96,s.pct+'%','Actividades completadas')}${chip('circle-check','#8B5CF6',40)}</div><b>Actividades completadas</b><span class="muted small">${s.done} de ${s.total} (diagnóstico, dimensiones y plan)</span></div>
+  <div class="card tile"><div class="row between"><span class="big">${s.ret}</span>${chip('target','#F97316',40)}</div><b>Retos realizados</b><span class="muted small">de 13 retos de dimensiones</span></div>
+  <div class="card tile"><div class="row between"><span class="big">${s.vis}</span>${chip('compass','#06B6D4',40)}</div><b>Dimensiones exploradas</b><span class="muted small">${s.dd} completadas de 13</span></div>
+  <div class="card tile"><div class="row between">${ring(s.planPct,'#06B6D4',96,s.pt?s.planPct+'%':'—','Plan de 30 días')}${chip('calendar-days','#06B6D4',40)}</div><b>Plan de 30 días</b><span class="muted small">${s.pt?s.pd+' de '+s.pt+' actividades':'Aún sin plan'}</span></div>
+</section>
+<section class="card pad row">${chip('activity','#2563EB',44)}<div><b>Última actividad registrada</b><p class="muted small">${last||'Todavía no hay actividad registrada.'}</p></div></section>
+<section class="grid g2">
+  <div class="card pad col"><div class="row">${chip('bar-chart','#8B5CF6',40)}<div><h3 class="h3">Actividad de los últimos 14 días</h3><p class="muted small">Acciones registradas por día</p></div></div>
+    <div class="cols" role="img" aria-label="Columnas de actividad diaria">${k14.map(k=>{const n=S.act[k]||0;return `<div title="${n} acciones el ${fmt(k)}">${n?`<span>${n}</span>`:''}<i class="${n?'':'z'}" style="--h:${n?Math.max(8,Math.round(n/mx*100)):3}%"></i></div>`}).join('')}</div>
+    <div class="dl">${k14.map(k=>`<span>${parseD(k).getDate()}</span>`).join('')}</div></div>
+  <div class="card pad col"><div class="row">${chip('calendar-days','#2563EB',40)}<div><h3 class="h3">${now.toLocaleDateString('es',{month:'long',year:'numeric'})}</h3><p class="muted small">${s.days} días con actividad en total</p></div></div><div class="cal">${cells}</div></div>
+</section>
+<section class="col"><div class="row">${chip('trophy','#D97706',40)}<div><h2 class="h2">Tus logros</h2><p class="muted small">${Object.keys(S.ach).length} de ${ACH.length} desbloqueados</p></div></div>
+<div class="grid g2">${ACH.map(a=>{const un=S.ach[a.id],p=a.prog(s);return `<div class="ach ${un?'un':'lock'}">${chip(un?a.icon:'lock',a.color,52)}<div class="col" style="gap:4px;flex:1"><div class="row between"><b style="font-family:var(--fh)">${a.name}</b>${un?`<span class="pill ok">${fmt(un,{day:'numeric',month:'short'})}</span>`:`<span class="pill">Bloqueado</span>`}</div><span class="muted small">${a.desc}</span>${un?'':`<div class="row" style="gap:10px;flex-wrap:nowrap">${bar(Math.round(p[0]/p[1]*100),a.color)}<span class="small muted" style="white-space:nowrap">${p[0]}/${p[1]}</span></div>`}</div></div>`}).join('')}</div></section>
+<section class="card pad col"><div class="row">${chip('notebook-pen','#0D9488',40)}<h3 class="h3">Historial de reflexiones</h3></div>
+${hist.length?hist.slice(0,6).map(h=>`<div class="hist">${chip(h.icon,h.color,36)}<div class="col" style="gap:2px;min-width:0"><b class="small">${esc(h.title)}</b><span class="muted small" style="overflow-wrap:anywhere">${esc(h.txt.length>140?h.txt.slice(0,140)+'…':h.txt)}</span></div></div>`).join(''):'<p class="muted">Aún no hay reflexiones. Escribe en tu diario o completa una dimensión para verlas aquí.</p>'}
+${hist.length?`<div><button class="btn btn-ghost btn-sm" data-act="go" data-v="journal">Abrir mi diario</button></div>`:''}</section>`;
+}
+
+/* ============ DIARIO ============ */
+function vJournal(){
+  const dr=S.jdraft,ents=[...S.journal].sort((a,b)=>b.ts-a.ts);
+  const editor=ui.jedit?`<section class="card pad col" style="gap:16px"><div class="row between"><div class="row">${chip('pencil','#0D9488',44)}<div><h2 class="h2">${dr.id?'Editar entrada':'Nueva entrada'}</h2><p class="muted small">${dr.id?'Escrita el '+fmtLong(S.journal.find(e=>e.id===dr.id)?.date||today()):fmtLong(today())}</p></div></div></div>
+  ${JQ.map((q,k)=>`<div class="sec"><label class="lab" for="j-${k}">${chip(q[0],'#0D9488',30)}<b>${q[1]}</b></label><textarea class="ta" id="j-${k}" data-f="j:${k}" placeholder="Escribe aquí…" style="--c:#0D9488;min-height:80px">${esc(dr.a[k])}</textarea></div>`).join('')}
+  ${ui.jerr?'<div class="err" role="alert">Escribe al menos una respuesta de 3 caracteres o más para guardar la entrada.</div>':''}
+  <div class="row"><button class="btn btn-p" data-act="j-save">${ic('check',18)} Guardar entrada</button><button class="btn btn-ghost" data-act="j-cancel">Cancelar</button></div></section>`:'';
+  return `<div class="row between"><div><span class="eyebrow">Mi diario</span><h1 class="h1" style="margin-top:6px">MI DIARIO DE EVOLUCIÓN</h1><p class="lead" style="margin-top:8px">Un espacio breve para registrar lo que descubres y decides.</p></div>${ui.jedit?'':`<button class="btn btn-hot" data-act="j-new">${ic('plus',18)} Nueva entrada</button>`}</div>
+${editor}
+${ents.length?`<section class="col">${ents.map(e=>`<article class="entry"><div class="row between"><div class="row">${chip('notebook-pen','#0D9488',36)}<div><b style="font-family:var(--fh)">${fmt(e.date,{weekday:'long',day:'numeric',month:'long'})}</b>${e.edited?'<span class="muted small"> · editada</span>':''}</div></div>
+<div class="row"><button class="btn btn-ghost btn-sm" data-act="j-edit" data-id="${e.id}" aria-label="Editar entrada">${ic('pencil',15)} Editar</button><button class="btn btn-ghost btn-sm" data-act="j-del" data-id="${e.id}" aria-label="Eliminar entrada">${ic('trash',15)}</button></div></div>
+${JQ.map((q,k)=>e.a[k]&&e.a[k].trim()?`<div class="qa"><b>${q[1]}</b><p style="overflow-wrap:anywhere;white-space:pre-wrap">${esc(e.a[k])}</p></div>`:'').join('')}</article>`).join('')}</section>`
+:(ui.jedit?'':empty('notebook-pen','#0D9488','Tu diario está vacío','Escribe tu primera entrada con cinco preguntas breves. Cada una queda guardada con su fecha para que puedas volver a ellas.',`<button class="btn btn-hot" data-act="j-new">${ic('plus',18)} Escribir mi primera entrada</button>`))}`;
+}
+
+/* ============ SHELL, RENDER Y EVENTOS ============ */
+function activeNav(){return S.view==='dim'?'dims':S.view}
+function shell(content){
+  const s=stats();
+  const nav=NAV.map(n=>`<button class="navb ${activeNav()===n[0]?'on':''}" data-act="go" data-v="${n[0]}" ${activeNav()===n[0]?'aria-current="page"':''}>${ic(n[3],22)}<span>${n[1]}</span></button>`).join('');
+  const bn=NAV.map(n=>`<button class="${activeNav()===n[0]?'on':''}" data-act="go" data-v="${n[0]}" aria-label="${n[1]}" ${activeNav()===n[0]?'aria-current="page"':''}>${ic(n[3],22)}<span>${n[2]}</span></button>`).join('');
+  const modal=ui.modal?`<div class="modalbg" data-act="modal-bg"><div class="card modal" role="dialog" aria-modal="true" aria-labelledby="mt"><div class="row">${chip('info','#F97316',42)}<h3 class="h3" id="mt">${ui.modal.t}</h3></div><p class="muted">${ui.modal.p}</p><div class="row" style="justify-content:flex-end"><button class="btn btn-ghost btn-sm" data-act="modal-cancel">Cancelar</button><button class="btn btn-hot btn-sm" data-act="modal-ok">${ui.modal.ok}</button></div></div></div>`:'';
+  return `<div class="app"><aside class="side"><div class="brand">${chip('sparkles','#8B5CF6',44)}<div><b>TALENTO EN ACCIÓN</b><small>Convierte tu potencial en resultados</small></div></div>${nav}
+<div class="side-foot"><div class="row between"><b>Tu avance</b><b>${s.pct}%</b></div>${bar(s.pct,'linear-gradient(90deg,var(--cyan),var(--lime))')}<span>${s.done} de ${s.total} actividades</span></div></aside>
+<header class="top">${chip('sparkles','#8B5CF6',32)}<b>Talento en Acción</b></header>
+<main class="main"><div class="wrap"><div class="view" id="view">${content}</div></div></main>
+<nav class="bnav" aria-label="Navegación principal">${bn}</nav></div>${modal}`;
+}
+function body(){
+  switch(S.view){case'diag':return vDiag();case'results':return vResults();case'dims':return vDims();case'dim':return S.dimId?vDim(S.dimId):vDims();case'plan':return vPlan();case'progress':return vProgress();case'journal':return vJournal();default:return vHome()}
+}
+function render(o){
+  o=o||{};const y=window.scrollY,app=document.getElementById('app');
+  try{app.innerHTML=shell(body())}
+  catch(err){console.error(err);app.innerHTML=`<div style="padding:24px;max-width:520px;margin:40px auto"><div class="card pad col"><h2 class="h2">Algo no salió como esperábamos</h2><p class="muted">Tus datos siguen guardados. Vuelve al inicio e inténtalo de nuevo.</p><button class="btn btn-p" data-act="go" data-v="home">Volver al inicio</button></div></div>`}
+  app.classList.toggle('noanim',!o.anim);
+  const v=document.getElementById('view');if(v&&o.anim)v.classList.add('anim');
+  window.scrollTo(0,o.top?0:y);
+}
+function nav(v){S.view=v;ui.err=null;ui.jerr=false;save();render({anim:true,top:true})}
+function openModal(t,p,ok,act,data){ui.modal={t,p,ok,act,data};render({})}
+function closeModal(){ui.modal=null;render({})}
+function finishDiag(){
+  if(!DIMS.every(d=>ansv(d,0)!=null&&ansv(d,1)!=null)){toast('Faltan respuestas por completar');return}
+  S.diag.done=true;S.diag.date=today();S.view='results';commit('Completó el diagnóstico');toast('Tu mapa personal está listo');render({anim:true,top:true});
+}
+function act(a,el){
+  const ds=el.dataset;
+  switch(a){
+    case'go':return nav(ds.v);
+    case'dim-open':{const id=+ds.id;S.dimId=id;S.view='dim';D(id).vis=true;ui.err=null;commit();return render({anim:true,top:true})}
+    case'ans':S.diag.a[ds.k]=+ds.v;save();return render({});
+    case'diag-prev':if(S.diag.step>0){S.diag.step--;save();render({anim:true,top:true})}return;
+    case'diag-next':{const d=DIMS[S.diag.step];if(ansv(d,0)==null||ansv(d,1)==null){toast('Responde las dos afirmaciones para continuar');return}
+      if(S.diag.step<12){S.diag.step++;commit('Diagnóstico: etapa '+S.diag.step+' de 13');render({anim:true,top:true})}else finishDiag();return}
+    case'retake-ask':return openModal('¿Repetir la evaluación?','Se borrarán tus 26 respuestas actuales y tu mapa. Tu plan, tus ejercicios y tu diario se conservan.','Sí, repetir','retake');
+    case'reset-ask':return openModal('¿Borrar todos tus datos?','Se eliminarán diagnóstico, ejercicios, plan, diario y logros guardados en este navegador. No se puede deshacer.','Borrar todo','reset');
+    case'plan-create':{if(S.plan&&S.plan.tasks.some(t=>t.done||t.note))return openModal('¿Generar un plan nuevo?','El plan actual, con sus avances y notas, será reemplazado por uno nuevo basado en tu diagnóstico.','Sí, generar nuevo','plan');
+      if(!S.diag.done){toast('Primero completa el diagnóstico');return}return createPlan()}
+    case'task':{const t=S.plan.tasks[+ds.i];t.done=!t.done;t.dd=t.done?today():null;if(t.done)commit('Plan: '+t.title);else save();return render({})}
+    case'ret-toggle':{const s=D(+ds.id);s.ret=!s.ret;if(s.ret)logAct('Reto realizado: '+DIM(+ds.id).name);checkAch();save();return render({})}
+    case'dim-done':{const id=+ds.id,s=D(id),d=DIM(id);
+      if(s.done){s.done=false;s.date=null;save();return render({})}
+      const errs=[];s.r.forEach((t,k)=>{if(t.trim().length<10)errs.push(`Reflexión ${k+1}: escribe al menos 10 caracteres.`)});
+      if(s.ex.trim().length<10)errs.push('Ejercicio de aplicación: escribe al menos 10 caracteres.');
+      if(!s.ret)errs.push('Marca “Realicé este reto” cuando lo hayas hecho.');
+      if(s.rn.trim().length<3)errs.push('Anota cómo mediste el resultado del reto.');
+      if(errs.length){ui.err={id,list:errs};render({});const e=document.getElementById('derr');if(e)e.scrollIntoView({behavior:'smooth',block:'center'});return}
+      ui.err=null;s.done=true;s.date=today();s.ts=Date.now();commit('Completó la dimensión '+d.name);toast('Dimensión completada: '+d.name,'ach','badge-check');return render({})}
+    case'j-new':S.jdraft={id:null,a:['','','','','']};ui.jedit=true;ui.jerr=false;save();render({});return setTimeout(()=>{const e=document.getElementById('j-0');if(e)e.focus()},50);
+    case'j-edit':{const e=S.journal.find(x=>x.id===+ds.id);if(!e)return;S.jdraft={id:e.id,a:[...e.a]};ui.jedit=true;ui.jerr=false;save();render({top:true});return}
+    case'j-cancel':S.jdraft={id:null,a:['','','','','']};ui.jedit=false;ui.jerr=false;save();return render({});
+    case'j-save':{const dr=S.jdraft;if(!dr.a.some(t=>t.trim().length>=3)){ui.jerr=true;return render({})}
+      const a=dr.a.map(t=>t.trim());
+      if(dr.id){const e=S.journal.find(x=>x.id===dr.id);if(e){e.a=a;e.edited=Date.now()}}else S.journal.push({id:Date.now(),ts:Date.now(),date:today(),a});
+      S.jdraft={id:null,a:['','','','','']};ui.jedit=false;ui.jerr=false;commit('Escribió en su diario');toast('Entrada guardada');return render({top:true})}
+    case'j-del':return openModal('¿Eliminar esta entrada?','La entrada se borrará de tu diario de forma definitiva.','Eliminar','jdel',+ds.id);
+    case'modal-cancel':return closeModal();
+    case'modal-bg':if(el===event.target)closeModal();return;
+    case'modal-ok':{const m=ui.modal;ui.modal=null;
+      if(m.act==='retake'){S.diag={a:{},step:0,done:false,date:null};S.view='diag';save();render({anim:true,top:true})}
+      else if(m.act==='reset'){try{localStorage.removeItem(KEY)}catch(e){}mem=null;S=DEF();ui.open={};ui.jedit=false;render({anim:true,top:true});toast('Tus datos fueron borrados')}
+      else if(m.act==='plan'){createPlan()}
+      else if(m.act==='jdel'){S.journal=S.journal.filter(e=>e.id!==m.data);save();render({});toast('Entrada eliminada')}
+      return}
+  }
+}
+document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el)return;try{act(el.dataset.act,el)}catch(err){console.error(err);toast('Ocurrió un error. Intenta de nuevo.')}});
+document.addEventListener('input',e=>{
+  const t=e.target,f=t.dataset&&t.dataset.f;if(!f)return;const p=f.split(':');
+  try{
+    if(p[0]==='r'){D(+p[1]).r[+p[2]]=t.value;updDim(+p[1])}
+    else if(p[0]==='ex'){D(+p[1]).ex=t.value;updDim(+p[1])}
+    else if(p[0]==='rn'){D(+p[1]).rn=t.value;updDim(+p[1])}
+    else if(p[0]==='tn'){S.plan.tasks[+p[1]].note=t.value}
+    else if(p[0]==='j'){S.jdraft.a[+p[1]]=t.value}
+    save();
+  }catch(err){console.error(err)}
+});
+document.addEventListener('toggle',e=>{const t=e.target;if(t&&t.dataset&&t.dataset.ti!==undefined)ui.open[t.dataset.ti]=t.open},true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ui.modal)closeModal()});
+
+/* ============ ARRANQUE ============ */
+(function(){
+  const t=document.createElement('div');t.id='toasts';t.className='toasts';t.setAttribute('role','status');t.setAttribute('aria-live','polite');document.body.appendChild(t);
+  load();
+  ui.jedit=S.jdraft.a.some(x=>x&&x.trim());
+  if(!NAV.some(n=>n[0]===S.view)&&S.view!=='dim')S.view='home';
+  if(S.view==='dim'&&!DIM(S.dimId))S.view='dims';
+  if(S.view==='plan'&&!S.diag.done)S.view='home';
+  render({anim:true});
+})();
+</script>
+
+</body>
+</html>
